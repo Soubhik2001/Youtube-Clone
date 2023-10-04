@@ -58,10 +58,12 @@ CREATE TABLE Comments(
     id INT Auto_Increment Primary Key,
     user_id INT NOT NULL,
     video_id INT NOT NULL,
+    parent_comment_id INT NOT NULL,
     content VARCHAR(255),
     comment_date TIMESTAMP Default now(),
     FOREIGN KEY(user_id) REFERENCES Users(id) ON DELETE CASCADE,
-    FOREIGN KEY(video_id) REFERENCES Videos(id) ON DELETE CASCADE
+    FOREIGN KEY(video_id) REFERENCES Videos(id) ON DELETE CASCADE,
+    FOREIGN KEY(parent_comment_id) REFERENCES Comments(id) ON DELETE CASCADE
 );
 
 -- DROP TABLE IF EXISTS Likes;
