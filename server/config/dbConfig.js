@@ -1,17 +1,25 @@
 require("dotenv").config();
-const mysql = require("mysql");
-const connection = mysql.createConnection({
+const mysql= require("mysql2");
+
+
+const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: process.env.PASSWORD,
   database: "Youtube",
 });
 
-connection.connect();
+const promisePool = pool.promise();
+// const dbConnect = function () {
+//   connection.connect(function (err) {
+//     if (err) {
+//       console.error("error connecting: " + err.stack);
+//       return;
+//     }
+//     console.log("Successfully connected to database...");
+//   });
+// };
 
-connection.query("SELECT 1 + 1 AS solution", function (error, results, fields) {
-  if (error) throw error;
-  console.log("The solution is: ", results[0].solution);
-});
+// connection.end();
 
-connection.end();
+module.exports = { promisePool};

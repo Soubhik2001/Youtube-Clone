@@ -10,7 +10,7 @@ USE Youtube;
 CREATE TABLE Users(
     id INT Auto_Increment Primary Key,
     username VARCHAR(200),
-    email VARCHAR(200),
+    email VARCHAR(200) UNIQUE,
     password VARCHAR(255),
     user_pic_url VARCHAR(255),
     created_at TIMESTAMP Default now(),
