@@ -1,4 +1,17 @@
-// const {validationResult} = require("express-validator");
+const {body, validationResult} = require("express-validator");
+
+const isValid = (req, res, next) => {
+  const results = validationResult(req);
+  if (!results.isEmpty()) {
+    let errorMessages = [];
+    results.array().forEach((error) => {
+      errorMessages.push(error.msg);
+    });
+
+    return res.status(400).json({ success: false, messages: errorMessages });
+  }
+  next();
+};
 
 
 const validateEmail=[
@@ -6,7 +19,7 @@ const validateEmail=[
     .isEmail()
     .normalizeEmail()
     .escape()
-    .withMessage("Invalid format in email address ."),
+    .withMessage("Invalid format in email address."),
 ];
 
 const validatePassword = [
@@ -15,10 +28,21 @@ const validatePassword = [
         min: 6,
       })
       .escape()
-      .withMessage("Password must have atleast 8 characters ."),
+      .withMessage("Password must have atleast 6 characters."),
   ];
+
+const validateUsername =[
+  body("username")
+    .isLength({
+      min:3,
+    })
+    .escape()
+    .withMessage("Username must have atleast 3 characters."),
+];
 
 module.exports ={
     validateEmail,
-    validatePassword
+    validatePassword,
+    validateUsername,
+    isValid
 };
