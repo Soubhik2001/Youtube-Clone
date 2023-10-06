@@ -47,7 +47,7 @@ const loginUser = async (req, res) => {
     }
 
     const passwordMatched = await bcrypt.compare(password, user.password);
-    console.log(user.password);
+    // console.log(user.password);
 
     if (!passwordMatched) {
       return res.status(401).json({ message: "Authentication failed" });
@@ -63,4 +63,34 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+//Reset Password
+const resetPassword = async (req,res) =>{
+    try {
+        const {email, oldPassword, newPassword} = req.body;
+
+        const [userRows] = await promisePool.execute('SELECT * from Users WHERE email=?',[email]);
+
+        if(!userRows){
+          return res.status(404).json({message:'User not found'});
+        }
+
+        const user = userRows[0];
+
+        const passwordMatched = await bcrypt.compare(oldPassword, user.password);
+
+        if(!passwordMatched){
+          return res.status(401).json({message:'Invalid credentials'});
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await promisePool.execute('UPDATE Users SET password =? WHERE email=?',[hashedPassword,email]);
+
+        res.status(200).json({message:'Password reset successful'});
+    } catch (error) {
+        res.status(500).json({error:"Internal Server Error"});
+        console.log(error);
+    }
+};
+
+module.exports = { registerUser, loginUser, resetPassword };
