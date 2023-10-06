@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const {upload} = require("./config/multer.js");
 // const {dbConnect} = require('./config/dbConfig');
 
 const app = express();
@@ -11,9 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 const authRoutes = require('./routes/auth');
+const videoRoutes = require('./routes/video');
 
 app.use("/auth", authRoutes);
-
+app.use("/video", upload.single("video"),videoRoutes);
 
 const startServer = async () => {
   try {
