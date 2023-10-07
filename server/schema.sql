@@ -58,7 +58,7 @@ CREATE TABLE Comments(
     id INT Auto_Increment Primary Key,
     user_id INT NOT NULL,
     video_id INT NOT NULL,
-    parent_comment_id INT NOT NULL,
+    parent_comment_id INT,
     content VARCHAR(255),
     comment_date TIMESTAMP Default now(),
     FOREIGN KEY(user_id) REFERENCES Users(id) ON DELETE CASCADE,
