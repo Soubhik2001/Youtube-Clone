@@ -45,7 +45,7 @@ const deleteChannel = async (req, res) =>{
     const [channelResult] = await promisePool.execute("SELECT * From Channel Where id = ?", [channelId]);
 
     if(channelResult.length === 0){
-      res.status(404).json({success:false, message:"Channel not found"});
+      return res.status(404).json({success:false, message:"Channel not found"});
     }
 
     await promisePool.execute("DELETE From Channel Where id = ?", [channelId]);
