@@ -1,6 +1,5 @@
 const { promisePool } = require("../config/dbConfig");
 
-
 //Add like to a video
 const addLike = async (req, res) => {
   try {
@@ -31,9 +30,9 @@ const addLike = async (req, res) => {
 
     // Delete any existing dislike by the user for the same video
     await promisePool.execute(
-        "DELETE FROM Likes WHERE user_id = ? AND video_id = ? AND is_like = -1",
-        [userId, videoId]
-      );
+      "DELETE FROM Likes WHERE user_id = ? AND video_id = ? AND is_like = -1",
+      [userId, videoId]
+    );
 
     await promisePool.execute(
       "INSERT INTO Likes (user_id, video_id, is_like) VALUES (?, ?, 1)",
@@ -48,7 +47,6 @@ const addLike = async (req, res) => {
       .json({ success: false, message: "Internal Server Error" });
   }
 };
-
 
 //add dislike to a video
 const addDislike = async (req, res) => {
@@ -80,10 +78,9 @@ const addDislike = async (req, res) => {
 
     // Delete any existing like by the user for the same video
     await promisePool.execute(
-        "DELETE FROM Likes WHERE user_id = ? AND video_id = ? AND is_like = 1",
-        [userId, videoId]
-      );
-  
+      "DELETE FROM Likes WHERE user_id = ? AND video_id = ? AND is_like = 1",
+      [userId, videoId]
+    );
 
     await promisePool.execute(
       "INSERT INTO Likes (user_id, video_id, is_like) VALUES (?,?,-1)",
@@ -101,73 +98,165 @@ const addDislike = async (req, res) => {
   }
 };
 
-
 //delete a like from video
 const deleteLike = async (req, res) => {
   try {
     const { videoId } = req.body;
-  const userId = req.user.userId;
-
-  const [videoResult] = await promisePool.execute(
-    "SELECT * From Videos Where id = ?",
-    [videoId]
-  );
-
-  if (videoResult.length === 0) {
-    return res.status(404).json({ success: false, message: "Video not found" });
-  }
-
-  const [existingLike] = await promisePool.execute(
-    "SELECT * From Likes Where user_id = ? AND video_id = ? AND is_like = 1",
-    [userId, videoId]
-  );
-
-  if(existingLike.length === 0){
-    return res.status(404).json({success:false, message:"Like not found"});
-  }
-
-  await promisePool.execute("DELETE From Likes Where user_id = ? AND video_id = ? AND is_like = 1", [userId, videoId]);
-
-  return res.status(200).json({success:true, message:"Deleted the like"});
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({success:false, message:"Internal Server Error"});
-  }
-};
-
-
-//delete a dislike from a video
-const deleteDislike = async (req, res) => {
-    try {
-      const { videoId } = req.body;
     const userId = req.user.userId;
-  
+
     const [videoResult] = await promisePool.execute(
       "SELECT * From Videos Where id = ?",
       [videoId]
     );
-  
+
     if (videoResult.length === 0) {
-      return res.status(404).json({ success: false, message: "Video not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Video not found" });
     }
-  
+
+    const [existingLike] = await promisePool.execute(
+      "SELECT * From Likes Where user_id = ? AND video_id = ? AND is_like = 1",
+      [userId, videoId]
+    );
+
+    if (existingLike.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Like not found" });
+    }
+
+    await promisePool.execute(
+      "DELETE From Likes Where user_id = ? AND video_id = ? AND is_like = 1",
+      [userId, videoId]
+    );
+
+    return res.status(200).json({ success: true, message: "Deleted the like" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+//delete a dislike from a video
+const deleteDislike = async (req, res) => {
+  try {
+    const { videoId } = req.body;
+    const userId = req.user.userId;
+
+    const [videoResult] = await promisePool.execute(
+      "SELECT * From Videos Where id = ?",
+      [videoId]
+    );
+
+    if (videoResult.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Video not found" });
+    }
+
     const [existingLike] = await promisePool.execute(
       "SELECT * From Likes Where user_id = ? AND video_id = ? AND is_like = -1",
       [userId, videoId]
     );
-  
-    if(existingLike.length === 0){
-      return res.status(404).json({success:false, message:"Dislike not found"});
-    }
-  
-    await promisePool.execute("DELETE From Likes Where user_id = ? AND video_id = ? AND is_like = -1", [userId, videoId]);
-  
-    return res.status(200).json({success:true, message:"Deleted the dislike"});
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({success:false, message:"Internal Server Error"});
-    }
-  };
 
+    if (existingLike.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Dislike not found" });
+    }
 
-module.exports = { addLike, addDislike, deleteLike, deleteDislike };
+    await promisePool.execute(
+      "DELETE From Likes Where user_id = ? AND video_id = ? AND is_like = -1",
+      [userId, videoId]
+    );
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Deleted the dislike" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+const getLikesByVideoId = async (req, res) => {
+  try {
+    const { videoId } = req.params;
+
+    const [videoResult] = await promisePool.execute(
+      "SELECT * From Videos Where id = ?",
+      [videoId]
+    );
+
+    if (videoResult.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Video not found" });
+    }
+
+    const [likes] = await promisePool.execute(
+      "SELECT * From Likes Where video_id = ? AND is_like = 1",
+      [videoId]
+    );
+
+    if (likes.length === 0) {
+      return res.status(404).json({ success: false, message: "No Likes Yet" });
+    }
+
+    return res.status(200).json({ success: true, likes });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+const getDislikesByVideoId = async (req, res) => {
+  try {
+    const { videoId } = req.params;
+
+    const [videoResult] = await promisePool.execute(
+      "SELECT * From Videos Where id = ?",
+      [videoId]
+    );
+
+    if (videoResult.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Video not found" });
+    }
+
+    const [dislikes] = await promisePool.execute(
+      "SELECT * From Likes Where video_id = ? AND is_like = -1",
+      [videoId]
+    );
+
+    if (dislikes.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No Dislikes Yet" });
+    }
+
+    return res.status(200).json({ success: true, dislikes });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  addLike,
+  addDislike,
+  deleteLike,
+  deleteDislike,
+  getLikesByVideoId,
+  getDislikesByVideoId,
+};
