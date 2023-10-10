@@ -17,12 +17,15 @@ const videoRoutes = require('./routes/video');
 const commentRoutes = require('./routes/comment');
 const channelRoutes = require('./routes/channel');
 const LikeRoutes = require('./routes/like');
+const SubscriptionRoutes = require('./routes/subscription');
 
 app.use("/auth", authRoutes);
 app.use("/video", upload.single("video"),videoRoutes);
 app.use("/comment",commentRoutes);
 app.use("/channel",channelRoutes);
 app.use("/like",LikeRoutes);
+app.use("/subscription", SubscriptionRoutes);
+
 
 //Server
 const startServer = async () => {
