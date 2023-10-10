@@ -38,4 +38,23 @@ const getChannels = async (req, res) => {
     }
   };
 
-module.exports = { addChannel,getChannels };
+const deleteChannel = async (req, res) =>{
+  try {
+    const {channelId} = req.params;
+
+    const [channelResult] = await promisePool.execute("SELECT * From Channel Where id = ?", [channelId]);
+
+    if(channelResult.length === 0){
+      res.status(404).json({success:false, message:"Channel not found"});
+    }
+
+    await promisePool.execute("DELETE From Channel Where id = ?", [channelId]);
+
+    return res.status(200).json({success:true, message:"Channel deleted successfully."});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({success:false, message:"Internal Server Error"});
+  }
+};
+
+module.exports = { addChannel, getChannels, deleteChannel };
