@@ -143,7 +143,7 @@ export default {
   width: 200px;
   height: 100%;
   position: fixed;
-  top: 120px;
+  top: 90px;
   left: -250px;
   background-color: #fff;
   transition: left 0.3s ease-in-out;
@@ -161,7 +161,7 @@ export default {
 }
 
 .sidebar li {
-  margin: 20px 0;
+  margin: 40px 20px;
   display: flex;
   align-items: center;
   gap: 10px;

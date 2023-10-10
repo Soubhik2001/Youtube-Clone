@@ -16,16 +16,17 @@ const authRoutes = require('./routes/auth');
 const videoRoutes = require('./routes/video');
 const commentRoutes = require('./routes/comment');
 const channelRoutes = require('./routes/channel');
-const LikeRoutes = require('./routes/like');
-const SubscriptionRoutes = require('./routes/subscription');
+const likeRoutes = require('./routes/like');
+const subscriptionRoutes = require('./routes/subscription');
+const userRoutes = require('./routes/user');
 
 app.use("/auth", authRoutes);
 app.use("/video", upload.single("video"),videoRoutes);
 app.use("/comment",commentRoutes);
 app.use("/channel",channelRoutes);
-app.use("/like",LikeRoutes);
-app.use("/subscription", SubscriptionRoutes);
-
+app.use("/like",likeRoutes);
+app.use("/subscription", subscriptionRoutes);
+app.use("/user",userRoutes);
 
 //Server
 const startServer = async () => {
