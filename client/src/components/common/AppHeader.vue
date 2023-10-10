@@ -1,45 +1,76 @@
 <template>
   <div class="header">
-    <!-- Logo -->
+    <!-- Hamburger Menu Button -->
+    <button class="hamburger-button" @click="toggleSidebar">
+      <i class="fas fa-bars" style="color: #606060; font-size: 20px;"></i>
+    </button>
+
     <router-link to="/home" class="logo">
-      <img
-        src="../../assets/download.png"
-        alt="YouTube Logo"
-      />
+      <img src="../../assets/Youtube-logo.jpg" alt="YouTube Logo" />
     </router-link>
 
-    <!-- Search Bar -->
     <div class="search-bar">
-      <input type="text" placeholder="Search"/>
-      <button> <v-icon style="color: rgb(160, 158, 158); font-size: 24px;">fas fa-search</v-icon>
-</button>
+      <input type="text" placeholder="Search" />
+      <button>
+        <i class="fas fa-search" style="color: #606060; font-size: 20px;"></i>
+      </button>
     </div>
 
-    <!-- Navigation Links -->
-    <!-- <div class="nav-links">
-      <router-link to="/">Home</router-link>
+    <div class="nav-links">
+      <router-link to="/home">Home</router-link>
       <router-link to="/trending">Trending</router-link>
       <router-link to="/subscriptions">Subscriptions</router-link>
-    </div> -->
+    </div>
 
-    <!-- User Profile (You can customize this part) -->
     <div class="user-profile">
       <router-link to="/">
-        <button><v-icon :icon="`mdiSvg:${mdiAccount}`"></v-icon></button>
+        <i class="fas fa-user" style="color: #606060; font-size: 20px;"></i>
       </router-link>
-      
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" :class="{ 'open': isSidebarOpen }">
+      <!-- Sidebar Content -->
+      <ul>
+        <router-link to="/home">
+          <li>
+            <i class="fas fa-home" style="color: #333; font-size: 20px;"></i>
+            Home
+          </li>
+        </router-link>
+        <router-link to="/explore">
+          <li>
+            <i class="fas fa-compass" style="color: #333; font-size: 20px;"></i>
+            Explore
+          </li>
+        </router-link>
+        <router-link to="/subscriptions">
+          <li>
+            <i class="fas fa-rss" style="color: #333; font-size: 20px;"></i>
+            Subscriptions
+          </li>
+        </router-link>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Header",
+  data() {
+    return {
+      isSidebarOpen: false,
+    };
+  },
+  methods: {
+    toggleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen;
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* Add your styling for the header here */
 .header {
   display: flex;
   justify-content: space-between;
@@ -50,37 +81,36 @@ export default {
 }
 
 .logo img {
-  width: 100px;
-  height: 80px;
+  width: 90px;
+  height: auto;
 }
 
 .search-bar {
-  flex: 0.5;
+  flex: 0.6;
   margin: 0 20px;
   display: flex;
   align-items: center;
-  border-radius: 40px 0 0 40px;
+  background-color: #f1f1f1;
+  border-radius: 24px;
+  padding: 4px 12px;
 }
 
 .search-bar input {
   flex: 1;
-  justify-content: center;
-  align-items: center;
-  width: 500px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 6px 12px;
+  font-size: 16px;
 }
 
 .search-bar button {
-  background-color: #e2dfdf;
-  color: #fff;
+  background-color: transparent;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  outline: none;
   cursor: pointer;
+  padding: 4px;
 }
-
 
 .nav-links {
   display: flex;
@@ -89,16 +119,63 @@ export default {
 
 .nav-links a {
   text-decoration: none;
-  color: #333;
+  color: #606060;
   font-weight: bold;
-  padding: 8px;
+  font-size: 16px;
 }
 
 .user-profile a {
   text-decoration: none;
+  color: #606060;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.hamburger-button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.sidebar {
+  width: 200px;
+  height: 100%;
+  position: fixed;
+  top: 120px;
+  left: -250px;
+  background-color: #fff;
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+/* Sidebar Link Styles */
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar a {
+  text-decoration: none;
   color: #333;
   font-weight: bold;
+  font-size: 16px;
+}
+
+/* Sidebar Icon Styles */
+.sidebar i {
+  font-size: 20px;
 }
 </style>
-
-<script></script>

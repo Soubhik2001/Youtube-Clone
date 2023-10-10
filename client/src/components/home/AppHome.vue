@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import AppNavbar from "../common/AppNavbar.vue";
+// import AppNavbar from "../common/AppNavbar.vue";
 import AppHeader from "../common/AppHeader.vue";
 
 export default {
   components: {
-    AppNavbar,
+    // AppNavbar,
     AppHeader,
   },
 };

@@ -6,6 +6,7 @@
           v-model="email"
           :rules="rules"
           label="Email"
+          variant="outlined"
           class="font-weight-bold"
         ></v-text-field>
         <v-btn
