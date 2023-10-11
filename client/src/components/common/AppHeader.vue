@@ -2,7 +2,7 @@
   <div class="header">
     <!-- Hamburger Menu Button -->
     <button class="hamburger-button" @click="toggleSidebar">
-      <i class="fas fa-bars" style="color: #606060; font-size: 20px;"></i>
+      <i class="fas fa-bars" style="color: #606060; font-size: 20px"></i>
     </button>
 
     <router-link to="/home" class="logo">
@@ -12,42 +12,73 @@
     <div class="search-bar">
       <input type="text" placeholder="Search" />
       <button>
-        <i class="fas fa-search" style="color: #606060; font-size: 20px;"></i>
+        <i class="fas fa-search" style="color: #606060; font-size: 20px"></i>
       </button>
     </div>
 
-    <div class="nav-links">
-      <router-link to="/home">Home</router-link>
-      <router-link to="/trending">Trending</router-link>
-      <router-link to="/subscriptions">Subscriptions</router-link>
-    </div>
+    <!-- <div class="nav-links"></div> -->
 
-    <div class="user-profile">
+    <div class="nav-links">
+      <router-link to="/channel"
+        ><i class="fas fa-tv" style="font-size: 20px"></i
+      ></router-link>
+      <router-link to="/notifications"
+        ><i class="fas fa-bell" style="font-size: 20px"></i
+      ></router-link>
       <router-link to="/">
-        <i class="fas fa-user" style="color: #606060; font-size: 20px;"></i>
+        <i class="fas fa-user" style="color: #606060; font-size: 20px"></i>
       </router-link>
     </div>
 
     <!-- Sidebar -->
-    <div class="sidebar" :class="{ 'open': isSidebarOpen }">
+    <div class="sidebar" :class="{ open: isSidebarOpen }">
       <!-- Sidebar Content -->
       <ul>
         <router-link to="/home">
-          <li>
-            <i class="fas fa-home" style="color: #333; font-size: 20px;"></i>
+          <li class="sidebar-item">
+            <i class="fas fa-home" style="color: #333; font-size: 20px"></i>
             Home
           </li>
         </router-link>
+        <router-link to="/subscriptions">
+          <li class="sidebar-item">
+            <i class="fas fa-rss" style="color: #333; font-size: 20px"></i>
+            Subscriptions
+          </li>
+        </router-link>
+        <router-link to="/likedVideos">
+          <li class="sidebar-item">
+            <i class="fas fa-thumbs-up" style="color: #333; font-size: 20px"></i>
+            Liked Videos
+          </li>
+        </router-link>
+        <hr>
         <router-link to="/explore">
-          <li>
-            <i class="fas fa-compass" style="color: #333; font-size: 20px;"></i>
+          <li class="sidebar-item">
+            <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
             Explore
           </li>
         </router-link>
-        <router-link to="/subscriptions">
-          <li>
-            <i class="fas fa-rss" style="color: #333; font-size: 20px;"></i>
-            Subscriptions
+        <router-link to="/trending">
+          <li class="sidebar-item">
+            <i class="fas fa-fire" style="color: #333; font-size: 20px"></i>
+            Trending
+          </li>
+        </router-link>
+        <hr>
+        <router-link to="/settings">
+          <li class="sidebar-item">
+            <i class="fas fa-cog" style="color: #333; font-size: 20px"></i>
+            Settings
+          </li>
+        </router-link>
+        <router-link to="/about">
+          <li class="sidebar-item">
+            <i
+              class="fas fa-info-circle"
+              style="color: #333; font-size: 20px"
+            ></i>
+            About
           </li>
         </router-link>
       </ul>
@@ -177,5 +208,13 @@ export default {
 /* Sidebar Icon Styles */
 .sidebar i {
   font-size: 20px;
+}
+.sidebar-item:hover {
+  background-color: #dad5d5;
+  cursor: pointer;
+}
+.sidebar hr {
+  border-top: 1px solid #dad5d5;
+  margin: 20px 20px;
 }
 </style>
