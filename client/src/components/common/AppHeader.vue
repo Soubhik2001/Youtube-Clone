@@ -20,13 +20,16 @@
 
     <div class="nav-links">
       <router-link to="/channel"
-        ><i class="fas fa-tv" style="font-size: 20px"></i
+        ><i class="fas fa-tv" style="font-size: 20px" @click="openCreateChannelDialog"></i
       ></router-link>
       <router-link to="/notifications"
         ><i class="fas fa-bell" style="font-size: 20px"></i
       ></router-link>
-      <router-link to="/">
+      <router-link to="/profile">
         <i class="fas fa-user" style="color: #606060; font-size: 20px"></i>
+      </router-link>
+      <router-link to="/">
+        <i class="fas fa-sign-out-alt" style="color: #606060; font-size: 20px"></i>
       </router-link>
     </div>
 
@@ -97,6 +100,9 @@ export default {
     toggleSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen;
     },
+    openCreateChannelDialog(){
+      this.$emit('open-create-channel-dialog');
+    }
   },
 };
 </script>
@@ -171,7 +177,7 @@ export default {
 }
 
 .sidebar {
-  width: 200px;
+  width: 170px;
   height: 100%;
   position: fixed;
   top: 90px;
