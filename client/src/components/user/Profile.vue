@@ -2,7 +2,7 @@
   <div>
     <app-header></app-header>
   </div>
-  <v-container>
+  <v-container class="centererd-container" style="padding-top: 100px;">
     <h1 class="text-center" style="margin:20px">Profile</h1>
 
     <v-form>
@@ -66,3 +66,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 100% of the viewport height */
+}
+</style>

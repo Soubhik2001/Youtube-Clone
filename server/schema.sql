@@ -72,7 +72,9 @@ CREATE TABLE Likes(
     user_id INT NOT NULL,
     video_id INT NOT NULL,
     is_like BOOLEAN,
-    like_date TIMESTAMP Default now()
+    like_date TIMESTAMP Default now(),
+    FOREIGN KEY(user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY(video_id) REFERENCES Videos(id) ON DELETE CASCADE
 );
 
 -- DROP TABLE IF EXISTS Tags;

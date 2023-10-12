@@ -3,26 +3,6 @@ const fs = require("fs");
 const { promisePool } = require("../config/dbConfig.js");
 
 
-//Get Videos
-const getVideos = async (req, res) => {
-  try {
-    const [results] = await promisePool.execute("SELECT * FROM Videos");
-
-    if (results.length === 0) {
-      return res
-        .status(404)
-        .json({ success: true, message: "No videos found." });
-    }
-
-    return res.status(200).json({ success: true, videos: results });
-  } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Internal server error." });
-  }
-};
-
 //upload video
 const uploadVideo = async (req, res) => {
   try {
@@ -59,7 +39,7 @@ const uploadVideo = async (req, res) => {
 };
 
 
-module.exports = { uploadVideo, getVideos };
+module.exports = { uploadVideo };
 
 
 // //Delete video

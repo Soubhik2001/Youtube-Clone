@@ -19,17 +19,20 @@
     <!-- <div class="nav-links"></div> -->
 
     <div class="nav-links">
+      <router-link to="/home">
+        <i class="fas fa-house" style="color: #606060; font-size: 20px"></i>
+      </router-link>
       <router-link to="/channel"
         ><i class="fas fa-tv" style="font-size: 20px" @click="openCreateChannelDialog"></i
       ></router-link>
-      <router-link to="/notifications"
+      <router-link to="#"
         ><i class="fas fa-bell" style="font-size: 20px"></i
       ></router-link>
       <router-link to="/profile">
         <i class="fas fa-user" style="color: #606060; font-size: 20px"></i>
       </router-link>
       <router-link to="/">
-        <i class="fas fa-sign-out-alt" style="color: #606060; font-size: 20px"></i>
+        <i class="fas fa-sign-out-alt" style="color: #606060; font-size: 20px" @click="logout"></i>
       </router-link>
     </div>
 
@@ -49,33 +52,33 @@
             Subscriptions
           </li>
         </router-link>
-        <router-link to="/likedVideos">
+        <router-link to="likedVideos">
           <li class="sidebar-item">
             <i class="fas fa-thumbs-up" style="color: #333; font-size: 20px"></i>
             Liked Videos
           </li>
         </router-link>
         <hr>
-        <router-link to="/explore">
+        <router-link to="/#">
           <li class="sidebar-item">
             <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
             Explore
           </li>
         </router-link>
-        <router-link to="/trending">
+        <router-link to="/#">
           <li class="sidebar-item">
             <i class="fas fa-fire" style="color: #333; font-size: 20px"></i>
             Trending
           </li>
         </router-link>
         <hr>
-        <router-link to="/settings">
+        <router-link to="/#">
           <li class="sidebar-item">
             <i class="fas fa-cog" style="color: #333; font-size: 20px"></i>
             Settings
           </li>
         </router-link>
-        <router-link to="/about">
+        <router-link to="/#">
           <li class="sidebar-item">
             <i
               class="fas fa-info-circle"
@@ -102,13 +105,18 @@ export default {
     },
     openCreateChannelDialog(){
       this.$emit('open-create-channel-dialog');
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
 .header {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -223,4 +231,5 @@ export default {
   border-top: 1px solid #dad5d5;
   margin: 20px 20px;
 }
+
 </style>
