@@ -5,6 +5,6 @@ const {verifyToken} = require("../middleware/verifyToken");
 
 router.post('/upload',verifyToken, uploadVideo);
 
-// router.delete('/delete/:id',verifyToken, deleteVideo);
+router.delete('/delete/:videoId',verifyToken, deleteVideo);
 
 module.exports = router;

@@ -38,43 +38,49 @@ const uploadVideo = async (req, res) => {
   }
 };
 
-
-module.exports = { uploadVideo };
-
-
 // //Delete video
-// const deleteVideo = async (req, res) => {
-//   try {
-//     const { videoId } = req.params;
-//     const { userId } = req.user;
+const deleteVideo = async (req, res) => {
+  try {
+    const { videoId } = req.params;
+    const userId = req.user.userId;
 
-//     //Check for existence of video
-//     const [videoResult] = await promisePool.execute(
-//       "SELECT * FROM Videos Where id = ? ",[videoId]
-//     );
+    //Check for existence of video
+    const [videoResult] = await promisePool.execute(
+      "SELECT * FROM Videos Where id = ? ",[videoId]
+    );
+    // console.log(videoResult);
 
-//     if (videoResult.length === 0) {
-//       return res
-//         .status(404)
-//         .json({ success: false, message: "Video not found!"});
-//     }
+    if (videoResult.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Video not found!"});
+    }
 
-//     const video = videoResult[0];
+    const video = videoResult[0];
 
-//     // Check if the video was uploaded by the user
-//     if(video.uploader_id !==userId){
-//       return res.status(403).json({success:false, message:"Not authorized."});
-//     }
+    // Check if the video was uploaded by the user
+    if(video.uploader_id !==userId){
+      return res.status(403).json({success:false, message:"Not authorized."});
+    }
 
-//     await promisePool.execute('DELETE From Videos Where id=?',[videoId]);
+    await promisePool.execute('DELETE From Videos Where id=?',[videoId]);
 
-//     const videoFilePath = path.join(__dirname, "..", "uploads","videos",video.videoUrl);
+    // const videoFilePath = path.join(__dirname, "..", "uploads","videos",video.video_url);
 
-//     fs.unlinkSync(videoFilePath);
+    // fs.unlinkSync(videoFilePath);
 
-//     return res.status(200).json({success:true,message:"Video deleted successfully."});
-//   } catch (error) {
-//     console.log(error);
-//     return res.send(500).json({success:false, message:"Internal server error."});
-//   }
-// };
+    fs.unlinkSync(video.video_url);
+
+
+    return res.status(200).json({success:true,message:"Video deleted successfully."});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({success:false, message:"Internal server error."});
+  }
+};
+
+
+module.exports = { uploadVideo, deleteVideo};
+
+
+
