@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
@@ -86,16 +87,10 @@ export default {
       };
 
       try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        });
+        const response = await axios.post(apiUrl,credentials);
 
-        if (response.ok) {
-          const data = await response.json();
+        if (response.status === 200) {
+          const data = response.data;
           console.log(data.token);
           console.log("Login successful", data);
           this.$router.push("/home");
@@ -104,7 +99,8 @@ export default {
           throw new Error("Login failed");
         }
       } catch (error) {
-        console.error(error);
+        this.showAlert = true;
+         console.error(error);
       }
     },
   },

@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -82,22 +84,17 @@ export default {
         password: this.password,
       };
       try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(registrationData),
-        });
-        if (response.ok) {
-          const data = await response.json();
+        const response = await axios.post(apiUrl,registrationData);
+        if (response.status === 200) {
+          const data = response.data;
           console.log("Registration successful", data);
           this.$router.push("/");
         } else {
-          this.showAlert = true;
+          
           throw new Error("Registration failed");
         }
       } catch (error) {
+        this.showAlert = true;
         console.log(error);
       }
     },
