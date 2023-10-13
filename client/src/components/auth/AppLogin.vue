@@ -3,11 +3,22 @@
     <h4 class="ma-4">Welcome Back! Sign In to Dive into Videos</h4>
     <v-sheet min-width="250" max-width="400" class="w-50">
       <v-form @submit.prevent>
+        <div v-if="showAlert">
+          <v-alert
+            color="red-accent-4"
+            icon="fas fa-exclamation"
+            title="Invalid credentials"
+            text="Check your credentials"
+            :value="showAlert"
+          ></v-alert>
+        </div>
+
         <v-text-field
           type="email"
           label="Email"
           variant="outlined"
           class="font-weight-bold"
+          style="padding-top: 20px"
           v-model="email"
         ></v-text-field>
         <v-text-field
@@ -18,16 +29,16 @@
           v-model="password"
           autocomplete="false"
         ></v-text-field>
-          <v-btn
-            color="#da4e44"
-            type="submit"
-            block
-            rounded="lg"
-            size="x-large"
-            class="mt-2 font-weight-bold text-decoration-none"
-            @click="login"
-            >Login</v-btn
-          >
+        <v-btn
+          color="#da4e44"
+          type="submit"
+          block
+          rounded="lg"
+          size="x-large"
+          class="mt-2 font-weight-bold text-decoration-none"
+          @click="login"
+          >Login</v-btn
+        >
       </v-form>
       <p class="my-4 text-center">
         or
@@ -59,6 +70,7 @@ export default {
     return {
       email: "",
       password: "",
+      showAlert: false,
     };
   },
   methods: {
@@ -67,34 +79,36 @@ export default {
     //   console.log(credentials);
     // },
     async login() {
-  const apiUrl = 'http://localhost:3000/auth/login';
-  const credentials = {
-    email: this.email,
-    password: this.password,
-  };
+      const apiUrl = "http://localhost:3000/auth/login";
+      const credentials = {
+        email: this.email,
+        password: this.password,
+      };
 
-  try {
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(credentials),
-    });
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Login successful', data);
-      // Redirect to the home page or perform other actions on successful login
-      this.$router.push('/home'); // Assuming you're using Vue Router
-    } else {
-      throw new Error('Login failed');
-    }
-  } catch (error) {
-    console.error(error);
-    // Handle and display the login error to the user
-  }
-},
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data.token);
+          console.log("Login successful", data);
+          this.$router.push("/home");
+        } else {
+          this.showAlert = true;
+          throw new Error("Login failed");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>
+
+<style scoped></style>
