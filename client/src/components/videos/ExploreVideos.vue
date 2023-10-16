@@ -1,5 +1,8 @@
 <template>
+  <app-header></app-header>
   <v-container class="main">
+    <h2>Explore Videos</h2>
+    <br />
     <v-row>
       <v-col
         v-for="(card, index) in cards"
@@ -22,9 +25,9 @@
             class="image"
           ></v-img>
           <v-card-title>{{ card.title }}</v-card-title>
-          <v-card-subtitle>{{ card.like_count }} Likes</v-card-subtitle>
+          <v-card-subtitle>{{ card.like_count }} likes</v-card-subtitle>
           <div class="video-details">
-            <div class="duration">{{ card.duration }}</div>
+            <!-- <div class="duration">{{ card.duration }}</div> -->
             <div class="channel-info">
               <v-img
                 :src="card.channel_pic_url"
@@ -43,34 +46,35 @@
 
 <script>
 import axiosInstance from "@/axiosInstance";
-
+import AppHeader from "../common/AppHeader.vue";
 export default {
+  components: {
+    AppHeader,
+  },
   data() {
     return {
-      cards: [],
-      isHovered: null,
+        cards:[],
+        isHovered:null,
     };
   },
   methods: {
-    async getVideosFromSubscribedChannels() {
-      try {
-        const response = await axiosInstance.get(
-          "http://localhost:3000/user/getVideosFromSubscribedChannels"
-        );
+    async getAllVideos(){
+        try {
+            const response = await axiosInstance.get('http://localhost:3000/user/getAllVideos');
 
-        console.log(response);
-        if (response.status === 200) {
-          this.cards = response.data.results;
-        } else {
-          console.log("Unable to fetch videos from subscribed channels");
+            console.log(response);
+            if(response.status === 200){
+                this.cards = response.data.videos;
+            }else{
+                console.log('Unable to fetch videos');
+            }
+        } catch (error) {
+            console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    },
+    }
   },
   created() {
-    this.getVideosFromSubscribedChannels();
+    this.getAllVideos();
   },
 };
 </script>

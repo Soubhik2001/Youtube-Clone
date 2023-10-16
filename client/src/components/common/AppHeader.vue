@@ -59,7 +59,7 @@
           </li>
         </router-link>
         <hr>
-        <router-link to="/#">
+        <router-link to="exploreVideos">
           <li class="sidebar-item">
             <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
             Explore

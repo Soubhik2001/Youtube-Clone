@@ -41,7 +41,11 @@ const getLikedVideos = async (req, res) => {
   try {
     const userId = req.user.userId;
     const [likedVideos] = await promisePool.execute(
-      " SELECT * From Videos JOIN Likes ON Videos.id = Likes.video_id Where Likes.user_id = ? AND is_like = 1",
+      "SELECT V.*, L.is_like, "+
+      "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS like_count "+
+      "FROM Videos V "+
+      "JOIN Likes L ON V.id = L.video_id "+
+      "WHERE L.user_id = ? AND L.is_like = 1",
       [userId]
     );
 
@@ -116,7 +120,10 @@ const getAllChannels = async (req, res) => {
 //Get Videos
 const getAllVideos = async (req, res) => {
   try {
-    const [results] = await promisePool.execute("SELECT * FROM Videos");
+    const [results] = await promisePool.execute("SELECT v.*, c.channel_name, c.channel_pic_url, " + 
+    "(SELECT COUNT(*) FROM Likes l WHERE l.video_id = v.id AND l.is_like = 1) AS like_count " + 
+    "FROM Videos v " + 
+    "JOIN Channel c ON v.channel_id = c.id");
 
     if (results.length === 0) {
       return res

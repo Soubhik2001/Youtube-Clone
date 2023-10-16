@@ -25,9 +25,9 @@
             class="image"
           ></v-img>
           <v-card-title>{{ card.title }}</v-card-title>
-          <!-- <v-card-subtitle>{{ card.views }} views</v-card-subtitle> -->
+          <v-card-subtitle>{{ card.like_count }} Likes</v-card-subtitle>
           <div class="video-details">
-            <div class="duration">{{ card.duration }}</div>
+            <!-- <div class="duration">{{ card.duration }}</div> -->
             <div class="channel-info">
               <v-img
                 :src="card.channel_pic_url"
@@ -66,7 +66,7 @@ export default {
           "http://localhost:3000/user/getLikedVideos"
         );
 
-        // console.log(response);
+        console.log(response);
         if (response.status === 200) {
           this.cards = response.data.likedVideos;
         } else {

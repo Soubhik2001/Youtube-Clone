@@ -25,7 +25,7 @@
             cover
           ></v-img>
           <v-card-title>{{ card.channel_name }}</v-card-title>
-          <!-- <v-card-subtitle>{{ card.subscribers }} Subscribers</v-card-subtitle> -->
+          <v-card-subtitle>{{ card.subscriber_count }} Subscribers</v-card-subtitle>
         </v-card>
       </v-col>
     </v-row>
