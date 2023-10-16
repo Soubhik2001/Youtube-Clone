@@ -8,6 +8,8 @@ import Profile from '../components/user/Profile.vue';
 import Subscriptions from '../components/channel/Subscriptions.vue';
 import LikedVideos from '../components/videos/LikedVideos.vue';
 import ExploreVideos from '../components/videos/ExploreVideos.vue';
+import TrendingVideos from '../components/videos/TrendingVideos.vue';
+// import ViewVideo from '../components/videos/ViewVideo.vue';
 
 const routes = [
   { path: '/', component: AppLogin },
@@ -19,6 +21,8 @@ const routes = [
   { path: '/subscriptions', component:Subscriptions},
   { path: '/likedVideos', component:LikedVideos},
   { path: '/exploreVideos', component:ExploreVideos},
+  { path: '/trendingVideos', component:TrendingVideos},
+  // { path: '/viewVideo', component:ViewVideo},
 ];
 
 const router = createRouter({

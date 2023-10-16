@@ -65,7 +65,7 @@
             Explore
           </li>
         </router-link>
-        <router-link to="/#">
+        <router-link to="trendingVideos">
           <li class="sidebar-item">
             <i class="fas fa-fire" style="color: #333; font-size: 20px"></i>
             Trending

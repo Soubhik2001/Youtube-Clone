@@ -1,5 +1,6 @@
 const { promisePool } = require("../config/dbConfig");
 
+//get videos from the subscribed channels
 const getVideosFromSubscribedChannels = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -37,15 +38,16 @@ const getVideosFromSubscribedChannels = async (req, res) => {
   }
 };
 
+//get the liked videos
 const getLikedVideos = async (req, res) => {
   try {
     const userId = req.user.userId;
     const [likedVideos] = await promisePool.execute(
-      "SELECT V.*, L.is_like, "+
-      "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS like_count "+
-      "FROM Videos V "+
-      "JOIN Likes L ON V.id = L.video_id "+
-      "WHERE L.user_id = ? AND L.is_like = 1",
+      "SELECT V.*, L.is_like, " +
+        "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS like_count " +
+        "FROM Videos V " +
+        "JOIN Likes L ON V.id = L.video_id " +
+        "WHERE L.user_id = ? AND L.is_like = 1",
       [userId]
     );
 
@@ -64,6 +66,7 @@ const getLikedVideos = async (req, res) => {
   }
 };
 
+//get subscribed channels
 const getSubscriptions = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -92,6 +95,7 @@ const getSubscriptions = async (req, res) => {
   }
 };
 
+//get all channels
 const getAllChannels = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -120,10 +124,12 @@ const getAllChannels = async (req, res) => {
 //Get Videos
 const getAllVideos = async (req, res) => {
   try {
-    const [results] = await promisePool.execute("SELECT v.*, c.channel_name, c.channel_pic_url, " + 
-    "(SELECT COUNT(*) FROM Likes l WHERE l.video_id = v.id AND l.is_like = 1) AS like_count " + 
-    "FROM Videos v " + 
-    "JOIN Channel c ON v.channel_id = c.id");
+    const [results] = await promisePool.execute(
+      "SELECT v.*, c.channel_name, c.channel_pic_url, " +
+        "(SELECT COUNT(*) FROM Likes l WHERE l.video_id = v.id AND l.is_like = 1) AS like_count " +
+        "FROM Videos v " +
+        "JOIN Channel c ON v.channel_id = c.id"
+    );
 
     if (results.length === 0) {
       return res
@@ -194,7 +200,33 @@ const updateUserProfile = async (req, res) => {
     return res
       .status(200)
       .json({ success: true, message: "Updated successfully" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
 
+//get the trending videos
+const trendingVideos = async (req, res) => {
+  try {
+    const [results] = await promisePool.execute(
+      "SELECT V.*, C.channel_name, C.channel_pic_url, " +
+      "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS like_count " +
+      "FROM Videos V " +
+      "JOIN Channel C ON V.channel_id = C.id " +
+      "GROUP BY V.id " +
+      "HAVING like_count > 0 " + 
+      "ORDER BY like_count DESC"
+    );
+
+    if (trendingVideos.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No trending videos found" });
+    }
+    return res.status(200).json({ success: true, results });
   } catch (error) {
     console.log(error);
     return res
@@ -211,4 +243,5 @@ module.exports = {
   getAllVideos,
   getUserProfile,
   updateUserProfile,
+  trendingVideos,
 };
