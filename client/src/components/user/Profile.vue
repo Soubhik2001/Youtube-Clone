@@ -6,9 +6,27 @@
     <h1 class="text-center" style="margin: 20px">Profile</h1>
 
     <v-form>
+      <div v-if="showAlert">
+        <v-row justify="center">
+          <v-col cols="12" sm="6">
+            <v-alert
+              :color="alertColor"
+              :title="alertTitle"
+              :text="alertText"
+              :icon="alertIcon"
+              :value="showAlert"
+            ></v-alert>
+          </v-col>
+        </v-row>
+      </div>
+
       <v-row justify="center">
         <v-col cols="12" sm="6">
-          <v-text-field v-model="email" label="Email"></v-text-field>
+          <v-text-field
+            v-model="email"
+            label="Email"
+            style="padding-top: 20px"
+          ></v-text-field>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -59,6 +77,11 @@ export default {
       username: "",
       password: "",
       passwordVisible: false,
+      showAlert: false,
+      alertColor: "",
+      alertTitle: "",
+      alertText: "",
+      alertIcon: "",
     };
   },
   methods: {
@@ -67,7 +90,9 @@ export default {
     },
     async fetchUserProfile() {
       try {
-        const response = await axiosInstance.get('http://localhost:3000/user/getProfile');
+        const response = await axiosInstance.get(
+          "http://localhost:3000/user/getProfile"
+        );
 
         if (response.status === 200) {
           const userData = response.data.results;
@@ -76,7 +101,7 @@ export default {
           this.username = userData[0].username;
           this.email = userData[0].email;
         } else {
-          console.log('Failed to fetch user data');
+          console.log("Failed to fetch user data");
         }
       } catch (error) {
         console.log(error);
@@ -84,20 +109,37 @@ export default {
     },
     async updateProfile() {
       try {
-        const updatedData ={
+        const updatedData = {
           email: this.email,
           username: this.username,
           password: this.password,
         };
 
-        const response = await axiosInstance.patch('http://localhost:3000/user/updateProfile', updatedData);
-        if(response.status === 200){
-          console.log('Profile updated successfully.');
-        }else{
-          console.log('Failed to update profile');
+        const response = await axiosInstance.patch(
+          "http://localhost:3000/user/updateProfile",
+          updatedData
+        );
+        if (response.status === 200) {
+          console.log("Profile updated successfully.");
+          this.showAlert = true;
+          this.alertColor = "green";
+          this.alertTitle = "Success";
+          this.alertText = "Profile updated successfully";
+          this.alertIcon = "fas fa-check"
+        } else {
+          this.showAlert = true;
+          this.alertColor = "red-accent-4";
+          this.alertTitle = "Error!";
+          this.alertText = "Failed to update profile";
+          this.alertIcon = "fas fa-exclamation";
         }
       } catch (error) {
         console.log(error);
+        this.showAlert = true;
+        this.alertColor = "red-accent-4";
+        this.alertTitle = "Error";
+        this.alertText = "An error occurred while updating your profile";
+        this.alertIcon = "fas fa-exclamation";
       }
     },
   },
@@ -108,5 +150,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
