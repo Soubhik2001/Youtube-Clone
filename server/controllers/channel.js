@@ -3,12 +3,12 @@ const { promisePool } = require("../config/dbConfig");
 //Add channels
 const addChannel = async (req, res) => {
   try {
-    const { channelName } = req.body;
+    const { channelName, description, channel_pic_url } = req.body;
     const userId = req.user.userId;
 
     const [channelResult] = await promisePool.execute(
-      "INSERT INTO Channel (channel_name, owner_id) VALUES (?,?)",
-      [channelName, userId]
+      "INSERT INTO Channel (channel_name, owner_id, description, channel_pic_url) VALUES (?,?,?,?)",
+      [channelName, userId, description, channel_pic_url]
     );
     return res
       .status(200)
@@ -41,6 +41,7 @@ const getChannels = async (req, res) => {
   }
 };
 
+//Delete Channel
 const deleteChannel = async (req, res) => {
   try {
     const { channelId } = req.params;
@@ -69,10 +70,11 @@ const deleteChannel = async (req, res) => {
   }
 };
 
+//Update channel
 const updateChannel = async (req, res) => {
   try {
     const { channelId } = req.params;
-    const { name, description } = req.body;
+    const { name, description, channel_pic_url } = req.body;
 
     const [existingChannel] = await promisePool.execute(
       "SELECT * From Channel Where id = ?",
@@ -86,8 +88,8 @@ const updateChannel = async (req, res) => {
     }
 
     await promisePool.execute(
-      "UPDATE Channel SET channel_name = ?, description = ? Where id =?",
-      [name, description, channelId]
+      "UPDATE Channel SET channel_name = ?, description = ?, channel_pic_url = ? Where id =?",
+      [name, description, channel_pic_url, channelId]
     );
 
     return res
