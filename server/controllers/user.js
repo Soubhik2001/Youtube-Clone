@@ -138,7 +138,7 @@ const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
     const [results] = await promisePool.execute(
-      "SELECT username, email FROM Users Where id = ?",
+      "SELECT * FROM Users Where id = ?",
       [userId]
     );
 
