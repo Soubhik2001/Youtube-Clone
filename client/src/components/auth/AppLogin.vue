@@ -93,6 +93,7 @@ export default {
           const data = response.data;
           console.log(data.token);
           console.log("Login successful", data);
+          localStorage.setItem('token', data.token);
           this.$router.push("/home");
         } else {
           this.showAlert = true;

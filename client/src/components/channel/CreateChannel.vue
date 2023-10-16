@@ -88,6 +88,7 @@
 
 <script>
 import AppHeader from "../common/AppHeader.vue";
+import axiosInstance from '@/axiosInstance';
 
 export default {
   components: {
@@ -122,6 +123,9 @@ export default {
       },
     ],
   }),
+  methods:{
+    
+  }
 };
 </script>
 
