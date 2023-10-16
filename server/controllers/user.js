@@ -16,7 +16,7 @@ const getVideosFromSubscribedChannels = async (req, res) => {
       "JOIN Subscription ON Channel.id = Subscription.channel_id " +
       "JOIN Videos ON Channel.id = Videos.channel_id " +
       "LEFT JOIN Likes ON Videos.id = Likes.video_id " +
-      "WHERE Subscription.subscriber_id = ? AND Likes.is_like = 1 " +
+      "WHERE Subscription.subscriber_id = ? " +
       "GROUP BY Videos.id",
     [userId]
     );

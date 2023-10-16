@@ -26,7 +26,6 @@
           ></v-img>
           <v-card-title>{{ card.title }}</v-card-title>
           <!-- <v-card-subtitle>{{ card.views }} views</v-card-subtitle> -->
-          <!-- <div class="channel-name">{{ card.channel_name }}</div> -->
           <div class="video-details">
             <div class="duration">{{ card.duration }}</div>
             <div class="channel-info">
