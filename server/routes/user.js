@@ -9,6 +9,7 @@ const {
   getSubscriptions,
   getAllChannels,
   getUserProfile,
+  updateUserProfile,
 } = require("../controllers/user");
 
 router.get(
@@ -20,7 +21,7 @@ router.get("/getAllVideos", getAllVideos);
 router.get("/getLikedVideos", verifyToken, getLikedVideos);
 router.get("/getSubscriptions", verifyToken, getSubscriptions);
 router.get("/getAllChannels", verifyToken, getAllChannels);
-router.get('/getProfile', verifyToken, getUserProfile);
-
+router.get("/getProfile", verifyToken, getUserProfile);
+router.patch("/updateProfile", verifyToken, updateUserProfile);
 
 module.exports = router;

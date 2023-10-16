@@ -22,12 +22,10 @@ const getVideosFromSubscribedChannels = async (req, res) => {
     );
 
     if (results.length === 0) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "No video found from Subscribed Channels",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "No video found from Subscribed Channels",
+      });
     }
 
     return res.status(200).json({ success: true, results });
@@ -158,6 +156,46 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+//update user profile
+const updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { username, email, password } = req.body;
+
+    const [results] = await promisePool.execute(
+      "SELECT * FROM Users Where id = ?",
+      [userId]
+    );
+
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const [updateResult] = await promisePool.execute(
+      "UPDATE Users Set username = ?, email = ?, password =? Where id = ?",
+      [username, email, password, userId]
+    );
+
+    if (updateResult.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Update unsuccessful" });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Updated successfully" });
+
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getVideosFromSubscribedChannels,
   getLikedVideos,
@@ -165,4 +203,5 @@ module.exports = {
   getAllChannels,
   getAllVideos,
   getUserProfile,
+  updateUserProfile,
 };
