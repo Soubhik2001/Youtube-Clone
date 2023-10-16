@@ -105,7 +105,7 @@ export default {
       try {
         const response = await axiosInstance.get('http://localhost:3000/channel/get');
 
-        console.log(response);
+        // console.log(response);
         if(response.status === 200){
           this.cards = response.data.channels;
         }else{

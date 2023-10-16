@@ -11,7 +11,7 @@ const uploadVideo = async (req, res) => {
         .status(400)
         .json({ success: false, message: "No video file provided!" });
     }
-    const { channel_id } = req.body;
+    const { channel_id, title, description, thumbnail_url, duration } = req.body;
     const videoUrl = req.file.path;
     const userId = req.user.userId;
 
@@ -27,8 +27,8 @@ const uploadVideo = async (req, res) => {
     }
 
     const [videoResult] = await promisePool.execute(
-      "INSERT INTO Videos (video_url, uploader_id, channel_id) VALUES (?, ?,?)",
-      [videoUrl, userId, channel_id]
+      "INSERT INTO Videos (title, description, thumbnail_url, duration, video_url, uploader_id, channel_id) VALUES (?, ?,?,?,?,?,?)",
+      [title, description, thumbnail_url, duration, videoUrl, userId, channel_id]
     );
 
     return res.status(200).json({success:true, message:"Video uploaded successfully", videoUrl, videoId:videoResult.insertId});
