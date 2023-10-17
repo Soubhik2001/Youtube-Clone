@@ -143,6 +143,38 @@ const getAllVideos = async (req, res) => {
   }
 };
 
+//get a particular video
+const getVideo = async (req, res) => {
+  try {
+    const videoId = req.params.videoId;
+    const [results] = await promisePool.execute(
+      "SELECT " +
+        "title, V.video_url, " +
+        "( " +
+        "SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS likes, " +
+        "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = -1) AS dislikes, " +
+        "C.channel_name,C.channel_pic_url,CM.content, CM.user_id FROM Videos AS V " +
+        "JOIN Channel AS C " +
+        "ON " +
+        "V.channel_id = C.id " +
+        "LEFT JOIN Comments AS CM " +
+        "ON V.id = CM.video_id " +
+        "WHERE V.id = ?",
+      [videoId]
+    );
+
+    if(results.length === 0){
+      return res.status(404).json({success:false, message:"Video not found"});
+    }
+    return res.status(200).json({success:true, results});
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 //get user profile
 const getUserProfile = async (req, res) => {
   try {
@@ -241,4 +273,5 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   trendingVideos,
+  getVideo
 };
