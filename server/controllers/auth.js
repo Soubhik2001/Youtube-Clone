@@ -18,7 +18,7 @@ const registerUser = [
   async (req, res) => {
     try {
       const { username, email, password } = req.body;
-      console.log(req.body);
+      // console.log(req.body);
       //Check for existing users
       const [results] = await promisePool.execute(
         "SELECT * FROM Users WHERE email =?",
