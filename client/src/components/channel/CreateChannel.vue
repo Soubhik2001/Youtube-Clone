@@ -40,9 +40,9 @@
                   cover
                 ></v-img>
                 <v-card-title>{{ card.channel_name }}</v-card-title>
-                <!-- <v-card-subtitle
-                  >{{ card.subscribers }} Subscribers</v-card-subtitle
-                > -->
+                <v-card-subtitle
+                  >{{ card.subscriber_count }} Subscribers</v-card-subtitle
+                >
               </v-card>
             </v-col>
           </v-row>
@@ -103,11 +103,11 @@ export default {
   methods:{
     async getChannels(){
       try {
-        const response = await axiosInstance.get('http://localhost:3000/channel/get');
+        const response = await axiosInstance.get('http://localhost:3000/user/getAllChannels');
 
-        // console.log(response);
+        console.log(response);
         if(response.status === 200){
-          this.cards = response.data.channels;
+          this.cards = response.data.channelResults;
         }else{
           console.log('Failed to fetch channels');
         }

@@ -37,7 +37,7 @@ const registerUser = [
         [username, email, hashedPassword]
       );
       res
-        .status(201)
+        .status(200)
         .json({ success: true, message: "User registered successfully." });
     } catch (error) {
       console.error(error);

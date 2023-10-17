@@ -21,7 +21,7 @@ router.get(
 router.get("/getAllVideos", getAllVideos);
 router.get("/getLikedVideos", verifyToken, getLikedVideos);
 router.get("/getSubscriptions", verifyToken, getSubscriptions);
-router.get("/getAllChannels", verifyToken, getAllChannels);
+router.get("/getAllChannels", getAllChannels);
 router.get("/getProfile", verifyToken, getUserProfile);
 router.patch("/updateProfile", verifyToken, updateUserProfile);
 router.get("/getTrendingVideos", trendingVideos);

@@ -75,9 +75,7 @@ const getSubscriptions = async (req, res) => {
       "SELECT Channel.channel_name, Channel.channel_pic_url, COUNT(Subscription.id) AS subscriber_count " +
         "FROM Channel " +
         "JOIN Subscription ON Channel.id = Subscription.channel_id " +
-        "WHERE Subscription.subscriber_id = ? " +
-        "GROUP BY Channel.id",
-      [userId]
+        "GROUP BY Channel.id"
     );
 
     if (subscribedChannels.length === 0) {
@@ -98,13 +96,12 @@ const getSubscriptions = async (req, res) => {
 //get all channels
 const getAllChannels = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    // const userId = req.user.userId;
 
     const [channelResults] = await promisePool.execute(
-      "SELECT Channel.channel_name, Channel.channel_pic_url, COUNT(Subscription.id) AS subscriber_count " +
-        "FROM Channel " +
-        "JOIN Subscription ON Channel.id = Subscription.channel_id " +
-        "GROUP BY Channel.id"
+      "SELECT Channel.channel_name, Channel.channel_pic_url, " +
+        "(SELECT COUNT(*) FROM Subscription AS S WHERE S.channel_id = Channel.id) AS subscriber_count " +
+        "FROM Channel"
     );
 
     if (channelResults === 0) {
@@ -213,12 +210,12 @@ const trendingVideos = async (req, res) => {
   try {
     const [results] = await promisePool.execute(
       "SELECT V.*, C.channel_name, C.channel_pic_url, " +
-      "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS like_count " +
-      "FROM Videos V " +
-      "JOIN Channel C ON V.channel_id = C.id " +
-      "GROUP BY V.id " +
-      "HAVING like_count > 0 " + 
-      "ORDER BY like_count DESC"
+        "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS like_count " +
+        "FROM Videos V " +
+        "JOIN Channel C ON V.channel_id = C.id " +
+        "GROUP BY V.id " +
+        "HAVING like_count > 0 " +
+        "ORDER BY like_count DESC"
     );
 
     if (trendingVideos.length === 0) {
