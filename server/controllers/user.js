@@ -12,16 +12,22 @@ const getVideosFromSubscribedChannels = async (req, res) => {
         "Channel.channel_pic_url, " +
         "Videos.thumbnail_url, " +
         "Videos.title, " +
+        "Videos.id, "+
         "COUNT(Likes.id) AS like_count " +
-        "FROM Channel " +
-        "JOIN Subscription ON Channel.id = Subscription.channel_id " +
-        "JOIN Videos ON Channel.id = Videos.channel_id " +
-        "LEFT JOIN Likes ON Videos.id = Likes.video_id " +
-        "WHERE Subscription.subscriber_id = ? " +
-        "GROUP BY Videos.id",
-      [userId]
+        "FROM " +
+        "Channel " +
+        "JOIN " +
+        "Subscription ON Channel.id = Subscription.channel_id " +
+        "JOIN " +
+        "Videos ON Channel.id = Videos.channel_id " +
+        "LEFT JOIN " +
+        "Likes ON Videos.id = Likes.video_id " +
+        "WHERE " +
+        "Subscription.subscriber_id = ? " +
+        "GROUP BY " +
+        "Videos.id",[userId]
     );
-
+      // console.log(results);
     if (results.length === 0) {
       return res.status(404).json({
         success: false,
@@ -163,10 +169,12 @@ const getVideo = async (req, res) => {
       [videoId]
     );
 
-    if(results.length === 0){
-      return res.status(404).json({success:false, message:"Video not found"});
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Video not found" });
     }
-    return res.status(200).json({success:true, results});
+    return res.status(200).json({ success: true, results });
   } catch (error) {
     console.log(error);
     return res
@@ -273,5 +281,5 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   trendingVideos,
-  getVideo
+  getVideo,
 };

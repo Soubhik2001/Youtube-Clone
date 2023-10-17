@@ -1,68 +1,79 @@
 <template>
   <app-header></app-header>
   <v-container class="main">
-    <!-- Video Player -->
-    <v-card class="video-card">
-      <v-responsive>
-        <video controls :src="videoUrl" class="video-player"></video>
-      </v-responsive>
-    </v-card>
+    <div v-if="videoDetails">
+      <!-- Video Player -->
+      <v-card class="video-card">
+        <v-responsive>
+          <video controls :src="videoDetails.video_url" class="video-player"></video>
+        </v-responsive>
+      </v-card>
 
-    <!-- Actions -->
-    <v-card class="actions">
-      <v-card-title class="headline">{{ videoTitle }}</v-card-title>
-      <v-card-subtitle>
-        <i
-          @click="toggleLike"
-          :style="{ color: likeColor }"
-          class="fas fa-thumbs-up"
-          style="font-size: 25px; padding: 10px"
-        ></i> {{ likesCount }} Likes
-        <i
-          @click="toggleDislike"
-          :style="{ color: dislikeColor }"
-          class="fa fa-thumbs-down"
-          style="font-size: 25px; padding: 10px"
-        ></i>{{ dislikesCount }} Dislikes
-      </v-card-subtitle>
-      <div class="video-metadata">
-        <v-avatar class="avatar">
-          <img :src="channelImage" alt="Channel Image" />
-        </v-avatar>
-        <div class="channel-name">{{ channelName }}</div>
-      </div>
-      <v-card-text>
-        <v-textarea v-model="comment" label="Add a Comment"></v-textarea>
-        <v-btn @click="postComment">Post Comment</v-btn>
-      </v-card-text>
-    </v-card>
+      <!-- Actions -->
+      <v-card class="actions">
+        <v-card-title class="headline">{{ videoDetails.title }}</v-card-title>
+        <v-card-subtitle>
+          <i
+            @click="toggleLike"
+            :style="{ color: likeColor }"
+            class="fas fa-thumbs-up"
+            style="font-size: 25px; padding: 10px"
+          ></i>
+          {{ videoDetails.likes }} Likes
+          <i
+            @click="toggleDislike"
+            :style="{ color: dislikeColor }"
+            class="fa fa-thumbs-down"
+            style="font-size: 25px; padding: 10px"
+          ></i>
+          {{ videoDetails.dislikes }} Dislikes
+        </v-card-subtitle>
+        <div class="video-metadata">
+          <v-avatar class="avatar">
+            <img :src="videoDetails.channel_pic_url" alt="Channel Image" />
+          </v-avatar>
+          <div class="channel-name">{{ videoDetails.channel_name }}</div>
+        </div>
+        <v-card-text>
+          <v-textarea v-model="comment" label="Add a Comment"></v-textarea>
+          <v-btn @click="postComment">Post Comment</v-btn>
+        </v-card-text>
+      </v-card>
 
-    <!-- Related Videos -->
-    <v-card class="related-videos">
-      <v-card-title class="headline">Related Videos</v-card-title>
-      <v-row>
-        <v-col
-          v-for="(relatedVideo, index) in relatedVideos"
-          :key="index"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-        >
-          <v-card class="related-video-card">
-            <v-img :src="relatedVideo.thumbnail" aspect-ratio="16/9"></v-img>
-            <v-card-title class="subheading">{{
-              relatedVideo.title
-            }}</v-card-title>
-            <v-card-subtitle>{{ relatedVideo.channelName }}</v-card-subtitle>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-card>
+      <!-- Related Videos -->
+      <v-card class="related-videos">
+        <v-card-title class="headline">Related Videos</v-card-title>
+        <v-row>
+          <v-col
+            v-for="(relatedVideo, index) in relatedVideos"
+            :key="index"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
+            <v-card class="related-video-card">
+              <v-img :src="relatedVideo.thumbnail" aspect-ratio="16/9"></v-img>
+              <v-card-title class="subheading">
+                {{ relatedVideo.title }}
+              </v-card-title>
+              <v-card-subtitle>{{ relatedVideo.channelName }}</v-card-subtitle>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-card>
+    </div>
+
+    <div v-else>
+      <!-- You can add a loading indicator or message here -->
+      <v-progress-circular indeterminate color="primary" class="centered-progress"></v-progress-circular>
+    </div>
   </v-container>
 </template>
 
+
 <script>
+import axiosInstance from "@/axiosInstance";
 import AppHeader from "../common/AppHeader.vue";
 export default {
   components: {
@@ -70,14 +81,14 @@ export default {
   },
   data() {
     return {
-      videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-      videoTitle: "Sample Video Title",
-      videoViews: 1000,
-      channelImage:
-        "https://yt3.googleusercontent.com/ytc/AOPolaS101j27Disa_BYArytv-hXMRl8wNMtqZMTkrfH=s176-c-k-c0x00ffffff-no-rj",
-      channelName: "Channel Name",
-      likesCount: 500,
-      dislikesCount:20,
+      // videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+      // videoTitle: "Sample Video Title",
+      // videoViews: 1000,
+      // channelImage:
+      //   "https://yt3.googleusercontent.com/ytc/AOPolaS101j27Disa_BYArytv-hXMRl8wNMtqZMTkrfH=s176-c-k-c0x00ffffff-no-rj",
+      // channelName: "Channel Name",
+      // likesCount: 500,
+      // dislikesCount: 20,
       relatedVideos: [
         {
           thumbnail:
@@ -92,32 +103,67 @@ export default {
           channelName: "Related Channel 2",
         },
       ],
-      likeColor: "grey", 
-      dislikeColor: "grey", 
+      likeColor: "grey",
+      dislikeColor: "grey",
       comment: "",
       likeState: false,
       dislikeState: false,
+      videoDetails: null,
+      loading: false,
+      error: null,
+      baseUrl: 'http://localhost:3000'
     };
   },
-  methods:{
-  toggleLike() {
+  methods: {
+    constructVideoUrl(relativePath) {
+      return this.baseUrl + '/'+ relativePath;
+    },
+    toggleLike() {
       this.likeState = !this.likeState;
-      this.dislikeState = false; 
+      this.dislikeState = false;
       this.updateColors();
     },
     toggleDislike() {
       this.dislikeState = !this.dislikeState;
-      this.likeState = false; 
+      this.likeState = false;
       this.updateColors();
     },
     updateColors() {
       this.likeColor = this.likeState ? "blue" : "grey";
       this.dislikeColor = this.dislikeState ? "red" : "grey";
     },
+    postComment() {
+      console.log("Posted Comment:", this.comment);
+    },
+    async getVideoDetails(){  
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const videoId = this.$route.query.videoId;
+
+        const apiUrl = `http://localhost:3000/user/getVideo/${videoId}`;
+;
+
+        const response = await axiosInstance.get(apiUrl);
+        console.log(response);
+
+        if(response.status === 200){
+          this.videoDetails = response.data.results[0];
+          console.log(this.videoDetails.video_url);
+        }else{
+          this.error ='Failed to fetch video';
+        }
+      } catch (error) {
+        console.log(error);
+        this.error = 'An error occurred while fetching video details';
+      }finally{
+        this.loading = false;
+      }
+    }
   },
-  postComment() {
-   
-    console.log("Posted Comment:", this.comment);
+  created(){
+    this.getVideoDetails();
   }
 };
 </script>
@@ -140,7 +186,7 @@ export default {
   display: flex;
   align-items: center;
   padding-top: 10px;
-  padding-left:10px;
+  padding-left: 10px;
 }
 .avatar {
   width: 40px;
@@ -161,5 +207,11 @@ export default {
 }
 .related-video-card {
   margin-bottom: 20px;
+}
+.centered-progress {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

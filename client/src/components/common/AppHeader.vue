@@ -96,7 +96,7 @@
 export default {
   data() {
     return {
-      isSidebarOpen: true,
+      isSidebarOpen: false,
     };
   },
   methods: {

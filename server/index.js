@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const {upload} = require("./config/multer.js");
+
 // const {dbConnect} = require('./config/dbConfig');
 
 const app = express();
@@ -10,7 +11,7 @@ const server = require("http").createServer(app);
 //Middlewares
 app.use(cors());
 app.use(express.json());
-app.use('/uploads',express.static("uploads"));
+app.use('/uploads',express.static("uploads/videos"));
 
 //Routes
 const authRoutes = require('./routes/auth');

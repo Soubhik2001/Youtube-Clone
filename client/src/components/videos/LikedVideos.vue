@@ -11,34 +11,38 @@
         sm="6"
         md="4"
         lg="3"
-      >
-        <v-card
-          class="video-card"
-          :class="{ 'card-hover': isHovered === index }"
-          @mouseover="isHovered = index"
-          @mouseout="isHovered = null"
+        ><router-link
+          :to="{ path: '/viewVideo', query: { videoId: card.id } }"
+          style="text-decoration: none"
         >
-          <v-img
-            :src="card.thumbnail_url"
-            aspect-ratio="16/9"
-            height="200"
-            class="image"
-          ></v-img>
-          <v-card-title>{{ card.title }}</v-card-title>
-          <v-card-subtitle>{{ card.like_count }} Likes</v-card-subtitle>
-          <div class="video-details">
-            <!-- <div class="duration">{{ card.duration }}</div> -->
-            <div class="channel-info">
-              <v-img
-                :src="card.channel_pic_url"
-                height="30"
-                width="30"
-                style="border-radius: 15px"
-              ></v-img>
-              <div class="channel-name">{{ card.channel_name }}</div>
+          <v-card
+            class="video-card"
+            :class="{ 'card-hover': isHovered === index }"
+            @mouseover="isHovered = index"
+            @mouseout="isHovered = null"
+          >
+            <v-img
+              :src="card.thumbnail_url"
+              aspect-ratio="16/9"
+              height="200"
+              class="image"
+            ></v-img>
+            <v-card-title>{{ card.title }}</v-card-title>
+            <v-card-subtitle>{{ card.like_count }} Likes</v-card-subtitle>
+            <div class="video-details">
+              <!-- <div class="duration">{{ card.duration }}</div> -->
+              <div class="channel-info">
+                <v-img
+                  :src="card.channel_pic_url"
+                  height="30"
+                  width="30"
+                  style="border-radius: 15px"
+                ></v-img>
+                <div class="channel-name">{{ card.channel_name }}</div>
+              </div>
             </div>
-          </div>
-        </v-card>
+          </v-card>
+        </router-link>
       </v-col>
     </v-row>
   </v-container>

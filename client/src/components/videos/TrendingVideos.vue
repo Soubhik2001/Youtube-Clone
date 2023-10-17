@@ -12,6 +12,10 @@
         md="4"
         lg="3"
       >
+      <router-link
+          :to="{ path: '/viewVideo', query: { videoId: card.id } }"
+          style="text-decoration: none"
+        >
         <v-card
           class="video-card"
           :class="{ 'card-hover': isHovered === index }"
@@ -39,6 +43,7 @@
             </div>
           </div>
         </v-card>
+        </router-link>
       </v-col>
     </v-row>
   </v-container>
