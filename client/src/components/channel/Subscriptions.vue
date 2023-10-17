@@ -67,9 +67,9 @@ export default {
 </script>
 
 <style scoped>
-.explore-channels-heading {
+/* .explore-channels-heading {
   padding-top: 100px;
-}
+} */
 .main{
     padding-left:90px;
 }
