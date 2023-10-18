@@ -3,7 +3,7 @@ const { promisePool } = require("../config/dbConfig");
 //Add like to a video
 const addLike = async (req, res) => {
   try {
-    const { videoId } = req.body;
+    const { videoId } = req.params;
     const userId = req.user.userId;
 
     const [videoResult] = await promisePool.execute(
@@ -51,7 +51,7 @@ const addLike = async (req, res) => {
 //add dislike to a video
 const addDislike = async (req, res) => {
   try {
-    const { videoId } = req.body;
+    const { videoId } = req.params;
     const userId = req.user.userId;
 
     const [videoResult] = await promisePool.execute(
@@ -101,7 +101,7 @@ const addDislike = async (req, res) => {
 //delete a like from video
 const deleteLike = async (req, res) => {
   try {
-    const { videoId } = req.body;
+    const { videoId } = req.params;
     const userId = req.user.userId;
 
     const [videoResult] = await promisePool.execute(
@@ -143,7 +143,7 @@ const deleteLike = async (req, res) => {
 //delete a dislike from a video
 const deleteDislike = async (req, res) => {
   try {
-    const { videoId } = req.body;
+    const { videoId } = req.params;
     const userId = req.user.userId;
 
     const [videoResult] = await promisePool.execute(

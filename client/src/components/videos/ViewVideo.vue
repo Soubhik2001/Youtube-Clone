@@ -2,10 +2,15 @@
   <app-header></app-header>
   <v-container class="main">
     <div v-if="videoDetails">
+
       <!-- Video Player -->
       <v-card class="video-card">
         <v-responsive>
-          <video controls :src="videoDetails.video_url" class="video-player"></video>
+          <video
+            controls
+            :src="videoDetails.video_url"
+            class="video-player"
+          ></video>
         </v-responsive>
       </v-card>
 
@@ -65,30 +70,28 @@
     </div>
 
     <div v-else>
-      <!-- You can add a loading indicator or message here -->
-      <v-progress-circular indeterminate color="primary" class="centered-progress"></v-progress-circular>
+      <v-progress-circular
+        indeterminate
+        color="primary"
+        class="centered-progress"
+        model-value="20"
+        :size="70"
+        :width="5"
+      ></v-progress-circular>
     </div>
   </v-container>
 </template>
 
-
 <script>
 import axiosInstance from "@/axiosInstance";
 import AppHeader from "../common/AppHeader.vue";
+import axios from "axios";
 export default {
   components: {
     AppHeader,
   },
   data() {
     return {
-      // videoUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-      // videoTitle: "Sample Video Title",
-      // videoViews: 1000,
-      // channelImage:
-      //   "https://yt3.googleusercontent.com/ytc/AOPolaS101j27Disa_BYArytv-hXMRl8wNMtqZMTkrfH=s176-c-k-c0x00ffffff-no-rj",
-      // channelName: "Channel Name",
-      // likesCount: 500,
-      // dislikesCount: 20,
       relatedVideos: [
         {
           thumbnail:
@@ -111,22 +114,90 @@ export default {
       videoDetails: null,
       loading: false,
       error: null,
-      baseUrl: 'http://localhost:3000'
+      baseUrl: "http://localhost:3000",
     };
   },
   methods: {
     constructVideoUrl(relativePath) {
-      return this.baseUrl + '/'+ relativePath;
+      return this.baseUrl + "/" + relativePath;
     },
-    toggleLike() {
-      this.likeState = !this.likeState;
-      this.dislikeState = false;
-      this.updateColors();
+    async toggleLike() {
+      // this.likeState = !this.likeState;
+      // this.dislikeState = false;
+      // this.updateColors();
+
+      const videoId = this.$route.query.videoId;
+      const apiUrl = `http://localhost:3000/like/addLike/${videoId}`;
+
+      try {
+        // console.log(videoId);
+        if(!this.likeState){
+          const response = await axiosInstance.post(apiUrl);
+          if(response.status === 200){
+            this.likeState = true;
+            this.updateColors();
+            this.videoDetails.likes++;
+            if(this.dislikeState){
+              this.dislikeState = false;
+              this.updateColors();
+              this.videoDetails.dislikes--;
+            }
+          }else{
+            console.log('Failed to add like');
+          }
+        }else{
+          const deleteUrl = `http://localhost:3000/like/deleteLike/${videoId}`;
+          const response = await axiosInstance.delete(deleteUrl);
+          if(response.status === 200){
+            this.likeState = false;
+            this.updateColors();
+            this.videoDetails.likes--;
+          }else{
+            console.log('Failed to remove like');
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
-    toggleDislike() {
-      this.dislikeState = !this.dislikeState;
-      this.likeState = false;
-      this.updateColors();
+    async toggleDislike() {
+      // this.dislikeState = !this.dislikeState;
+      // this.likeState = false;
+      // this.updateColors();
+
+      const videoId = this.$route.query.videoId;
+      const apiUrl = `http://localhost:3000/like/addDislike/${videoId}`;
+
+      try {
+        if(!this.dislikeState){
+          const response = await axiosInstance.post(apiUrl);
+          if(response.status === 200){
+            this.dislikeState = true;
+            this.updateColors();
+            this.videoDetails.dislikes++;
+            if(this.likeState){
+              this.likeState = false;
+              this.updateColors();
+              this.videoDetails.likes--;
+            }
+          }else{
+            console.log('Failed to add dislike');
+          }
+        }
+          else{
+            const deleteUrl = `http://localhost:3000/like/deleteDislike/${videoId}`;
+            const response = await axiosInstance.delete(deleteUrl);
+            if(response.status === 200){
+              this.dislikeState = false;
+              this.updateColors();
+              this.videoDetails.dislikes--;
+            }else{
+              console.log('Failed to remove dislike');
+            }
+          }
+        }catch (error) {
+        console.log(error);
+      }
     },
     updateColors() {
       this.likeColor = this.likeState ? "blue" : "grey";
@@ -135,7 +206,7 @@ export default {
     postComment() {
       console.log("Posted Comment:", this.comment);
     },
-    async getVideoDetails(){  
+    async getVideoDetails() {
       this.loading = true;
       this.error = null;
 
@@ -143,28 +214,26 @@ export default {
         const videoId = this.$route.query.videoId;
 
         const apiUrl = `http://localhost:3000/user/getVideo/${videoId}`;
-;
-
         const response = await axiosInstance.get(apiUrl);
         console.log(response);
 
-        if(response.status === 200){
+        if (response.status === 200) {
           this.videoDetails = response.data.results[0];
           console.log(this.videoDetails.video_url);
-        }else{
-          this.error ='Failed to fetch video';
+        } else {
+          this.error = "Failed to fetch video";
         }
       } catch (error) {
         console.log(error);
-        this.error = 'An error occurred while fetching video details';
-      }finally{
+        this.error = "An error occurred while fetching video details";
+      } finally {
         this.loading = false;
       }
-    }
+    },
   },
-  created(){
+  created() {
     this.getVideoDetails();
-  }
+  },
 };
 </script>
 
@@ -196,12 +265,12 @@ export default {
   margin-left: 10px;
   font-weight: bold;
 }
-.icon {
+/* .icon {
   margin-left: 10px;
-}
-.likes {
+} */
+/* .likes {
   margin-right: 20px;
-}
+} */
 .related-videos {
   margin-top: 20px;
 }
