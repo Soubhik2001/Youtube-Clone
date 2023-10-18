@@ -37,7 +37,7 @@
     </div>
 
     <!-- Sidebar -->
-    <div class="sidebar" :class="{ open: isSidebarOpen }">
+    <div class="sidebar" :class="{ open: isSidebarOpen }" v-if="!displayIconsOnly">
       <!-- Sidebar Content -->
       <ul>
         <router-link to="/home">
@@ -72,19 +72,64 @@
           </li>
         </router-link>
         <hr>
-        <router-link to="/#">
+        <router-link to="#">
           <li class="sidebar-item">
             <i class="fas fa-cog" style="color: #333; font-size: 20px"></i>
             Settings
           </li>
         </router-link>
-        <router-link to="/#">
+        <router-link to="#">
           <li class="sidebar-item">
             <i
               class="fas fa-info-circle"
               style="color: #333; font-size: 20px"
             ></i>
             About
+          </li>
+        </router-link>
+      </ul>
+    </div>
+
+    <!-- Small Sidebar -->
+    <div class="icons-sidebar" :class="{ open: isIconsSidebarOpen }">
+      <!-- Sidebar Content -->
+      <ul>
+        <router-link to="/home">
+          <li class="icons-sidebar-item">
+            <i class="fas fa-home" style="color: #333; font-size: 20px"></i>
+          </li>
+        </router-link>
+        <router-link to="/subscriptions">
+          <li class="icons-sidebar-item">
+            <i class="fas fa-rss" style="color: #333; font-size: 20px"></i>
+          </li>
+        </router-link>
+        <router-link to="likedVideos">
+          <li class="icons-sidebar-item">
+            <i class="fas fa-thumbs-up" style="color: #333; font-size: 20px"></i>
+          </li>
+        </router-link>
+        <router-link to="exploreVideos">
+          <li class="icons-sidebar-item">
+            <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
+          </li>
+        </router-link>
+        <router-link to="trendingVideos">
+          <li class="icons-sidebar-item">
+            <i class="fas fa-fire" style="color: #333; font-size: 20px"></i>
+          </li>
+        </router-link>
+        <router-link to="#">
+          <li class="icons-sidebar-item">
+            <i class="fas fa-cog" style="color: #333; font-size: 20px"></i>
+          </li>
+        </router-link>
+        <router-link to="#">
+          <li class="icons-sidebar-item">
+            <i
+              class="fas fa-info-circle"
+              style="color: #333; font-size: 20px"
+            ></i>
           </li>
         </router-link>
       </ul>
@@ -97,10 +142,12 @@ export default {
   data() {
     return {
       isSidebarOpen: false,
+      isIconsSidebarOpen:true,
     };
   },
   methods: {
     toggleSidebar() {
+      this.isIconsSidebarOpen = !this.isIconsSidebarOpen;
       this.isSidebarOpen = !this.isSidebarOpen;
     },
     openCreateChannelDialog(){
@@ -228,6 +275,56 @@ export default {
   cursor: pointer;
 }
 .sidebar hr {
+  border-top: 1px solid #dad5d5;
+  margin: 20px 20px;
+}
+
+
+/* Icons sidebar */
+.icons-sidebar {
+  width: 50px;
+  height: 100%;
+  position: fixed;
+  top: 90px;
+  left: -250px;
+  background-color: #fff;
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.icons-sidebar.open {
+  left: 0;
+}
+
+/* Icons Sidebar Link Styles */
+.icons-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.icons-sidebar li {
+  margin: 40px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icons-sidebar a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Sidebar Icon Styles */
+.icons-sidebar i {
+  font-size: 20px;
+}
+.icons-sidebar-item:hover {
+  background-color: #dad5d5;
+  cursor: pointer;
+}
+.icons-sidebar hr {
   border-top: 1px solid #dad5d5;
   margin: 20px 20px;
 }
