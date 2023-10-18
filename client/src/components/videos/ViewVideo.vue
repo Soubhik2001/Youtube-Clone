@@ -219,6 +219,14 @@ export default {
 
         if (response.status === 200) {
           this.videoDetails = response.data.results[0];
+          if (this.videoDetails.userLike) {
+            this.likeState = true;
+            this.likeColor = "blue";
+          }
+          if (this.videoDetails.userDislike) {
+            this.dislikeState = true;
+            this.dislikeColor = "red";
+          }
           console.log(this.videoDetails.video_url);
         } else {
           this.error = "Failed to fetch video";

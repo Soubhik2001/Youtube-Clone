@@ -26,6 +26,6 @@ router.get("/getAllChannels", getAllChannels);
 router.get("/getProfile", verifyToken, getUserProfile);
 router.patch("/updateProfile", verifyToken, updateUserProfile);
 router.get("/getTrendingVideos", trendingVideos);
-router.get("/getVideo/:videoId", getVideo);
+router.get("/getVideo/:videoId", verifyToken, getVideo);
 
 module.exports = router;

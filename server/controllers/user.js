@@ -152,21 +152,23 @@ const getAllVideos = async (req, res) => {
 //get a particular video
 const getVideo = async (req, res) => {
   try {
+    const userId = req.user.userId;
     const videoId = req.params.videoId;
     const [results] = await promisePool.execute(
       "SELECT " +
-        "title, V.video_url, " +
-        "( " +
-        "SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS likes, " +
-        "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = -1) AS dislikes, " +
-        "C.channel_name,C.channel_pic_url,CM.content, CM.user_id FROM Videos AS V " +
-        "JOIN Channel AS C " +
-        "ON " +
-        "V.channel_id = C.id " +
-        "LEFT JOIN Comments AS CM " +
-        "ON V.id = CM.video_id " +
-        "WHERE V.id = ?",
-      [videoId]
+      "title, V.video_url, " +
+      "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS likes, " +
+      "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = -1) AS dislikes, " +
+      "C.channel_name, C.channel_pic_url, CM.content, CM.user_id, " +
+      "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND user_id = ? AND is_like = 1) AS userLike, " +
+      "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND user_id = ? AND is_like = -1) AS userDislike " +
+      "FROM Videos AS V " +
+      "JOIN Channel AS C " +
+      "ON V.channel_id = C.id " +
+      "LEFT JOIN Comments AS CM " +
+      "ON V.id = CM.video_id " +
+      "WHERE V.id = ?",
+      [userId, userId, videoId]
     );
 
     if (results.length === 0) {
