@@ -156,7 +156,7 @@ const getVideo = async (req, res) => {
     const videoId = req.params.videoId;
     const [results] = await promisePool.execute(
       "SELECT " +
-      "title, V.video_url, " +
+      "title, V.video_url, V.upload_date, " +
       "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = 1) AS likes, " +
       "(SELECT COUNT(*) FROM Likes WHERE video_id = V.id AND is_like = -1) AS dislikes, " +
       "C.channel_name, C.channel_pic_url, CM.content, CM.user_id, " +

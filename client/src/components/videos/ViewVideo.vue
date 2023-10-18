@@ -2,7 +2,6 @@
   <app-header></app-header>
   <v-container class="main">
     <div v-if="videoDetails">
-
       <!-- Video Player -->
       <v-card class="video-card">
         <v-responsive>
@@ -40,6 +39,7 @@
           <div class="channel-name">{{ videoDetails.channel_name }}</div>
         </div>
         <v-card-text>
+          <p class="upload-date">Uploaded {{ daysAgo }} days ago</p>
           <v-textarea v-model="comment" label="Add a Comment"></v-textarea>
           <v-btn @click="postComment">Post Comment</v-btn>
         </v-card-text>
@@ -117,6 +117,20 @@ export default {
       baseUrl: "http://localhost:3000",
     };
   },
+  computed: {
+  daysAgo() {
+    if (!this.videoDetails || !this.videoDetails.upload_date) {
+      return "";
+    }
+    const uploadDate = new Date(this.videoDetails.upload_date);
+    const currentDate = new Date();
+
+    const timeDifference = currentDate - uploadDate;
+    const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    return daysAgo;
+  },
+},
+
   methods: {
     constructVideoUrl(relativePath) {
       return this.baseUrl + "/" + relativePath;
@@ -131,29 +145,29 @@ export default {
 
       try {
         // console.log(videoId);
-        if(!this.likeState){
+        if (!this.likeState) {
           const response = await axiosInstance.post(apiUrl);
-          if(response.status === 200){
+          if (response.status === 200) {
             this.likeState = true;
             this.updateColors();
             this.videoDetails.likes++;
-            if(this.dislikeState){
+            if (this.dislikeState) {
               this.dislikeState = false;
               this.updateColors();
               this.videoDetails.dislikes--;
             }
-          }else{
-            console.log('Failed to add like');
+          } else {
+            console.log("Failed to add like");
           }
-        }else{
+        } else {
           const deleteUrl = `http://localhost:3000/like/deleteLike/${videoId}`;
           const response = await axiosInstance.delete(deleteUrl);
-          if(response.status === 200){
+          if (response.status === 200) {
             this.likeState = false;
             this.updateColors();
             this.videoDetails.likes--;
-          }else{
-            console.log('Failed to remove like');
+          } else {
+            console.log("Failed to remove like");
           }
         }
       } catch (error) {
@@ -169,33 +183,32 @@ export default {
       const apiUrl = `http://localhost:3000/like/addDislike/${videoId}`;
 
       try {
-        if(!this.dislikeState){
+        if (!this.dislikeState) {
           const response = await axiosInstance.post(apiUrl);
-          if(response.status === 200){
+          if (response.status === 200) {
             this.dislikeState = true;
             this.updateColors();
             this.videoDetails.dislikes++;
-            if(this.likeState){
+            if (this.likeState) {
               this.likeState = false;
               this.updateColors();
               this.videoDetails.likes--;
             }
-          }else{
-            console.log('Failed to add dislike');
+          } else {
+            console.log("Failed to add dislike");
+          }
+        } else {
+          const deleteUrl = `http://localhost:3000/like/deleteDislike/${videoId}`;
+          const response = await axiosInstance.delete(deleteUrl);
+          if (response.status === 200) {
+            this.dislikeState = false;
+            this.updateColors();
+            this.videoDetails.dislikes--;
+          } else {
+            console.log("Failed to remove dislike");
           }
         }
-          else{
-            const deleteUrl = `http://localhost:3000/like/deleteDislike/${videoId}`;
-            const response = await axiosInstance.delete(deleteUrl);
-            if(response.status === 200){
-              this.dislikeState = false;
-              this.updateColors();
-              this.videoDetails.dislikes--;
-            }else{
-              console.log('Failed to remove dislike');
-            }
-          }
-        }catch (error) {
+      } catch (error) {
         console.log(error);
       }
     },
@@ -290,5 +303,10 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.upload-date {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 10px;
 }
 </style>
