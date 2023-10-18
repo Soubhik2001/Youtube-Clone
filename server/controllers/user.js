@@ -13,7 +13,7 @@ const getVideosFromSubscribedChannels = async (req, res) => {
         "Videos.thumbnail_url, " +
         "Videos.title, " +
         "Videos.id, "+
-        "COUNT(Likes.id) AS like_count " +
+        "COUNT(CASE WHEN Likes.is_like = 1 THEN Likes.id ELSE NULL END) AS like_count " +
         "FROM " +
         "Channel " +
         "JOIN " +
