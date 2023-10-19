@@ -62,7 +62,7 @@ export default {
           "http://localhost:3000/user/getVideosFromSubscribedChannels"
         );
 
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           this.cards = response.data.results;
         } else {

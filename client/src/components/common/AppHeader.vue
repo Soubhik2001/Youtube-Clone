@@ -37,7 +37,7 @@
     </div>
 
     <!-- Sidebar -->
-    <div class="sidebar" :class="{ open: isSidebarOpen }" v-if="!displayIconsOnly">
+    <div class="sidebar" :class="{ open: isSidebarOpen }">
       <!-- Sidebar Content -->
       <ul>
         <router-link to="/home">
