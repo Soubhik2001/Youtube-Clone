@@ -367,7 +367,7 @@ export default {
 <style scoped>
 .main {
   padding-left: 100px;
-  padding-top: 100px;
+  padding-top: 110px;
 }
 .video-card {
   margin-bottom: 20px;
