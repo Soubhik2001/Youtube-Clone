@@ -23,7 +23,11 @@
         <i class="fas fa-house" style="color: #606060; font-size: 20px"></i>
       </router-link>
       <router-link to="/channel"
-        ><i class="fas fa-tv" style="font-size: 20px" @click="openCreateChannelDialog"></i
+        ><i
+          class="fas fa-tv"
+          style="font-size: 20px"
+          @click="openCreateChannelDialog"
+        ></i
       ></router-link>
       <router-link to="#"
         ><i class="fas fa-bell" style="font-size: 20px"></i
@@ -32,7 +36,11 @@
         <i class="fas fa-user" style="color: #606060; font-size: 20px"></i>
       </router-link>
       <router-link to="/">
-        <i class="fas fa-sign-out-alt" style="color: #606060; font-size: 20px" @click="logout"></i>
+        <i
+          class="fas fa-sign-out-alt"
+          style="color: #606060; font-size: 20px"
+          @click="logout"
+        ></i>
       </router-link>
     </div>
 
@@ -54,11 +62,14 @@
         </router-link>
         <router-link to="likedVideos">
           <li class="sidebar-item">
-            <i class="fas fa-thumbs-up" style="color: #333; font-size: 20px"></i>
+            <i
+              class="fas fa-thumbs-up"
+              style="color: #333; font-size: 20px"
+            ></i>
             Liked Videos
           </li>
         </router-link>
-        <hr>
+        <hr />
         <router-link to="exploreVideos">
           <li class="sidebar-item">
             <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
@@ -71,7 +82,7 @@
             Trending
           </li>
         </router-link>
-        <hr>
+        <hr />
         <router-link to="#">
           <li class="sidebar-item">
             <i class="fas fa-cog" style="color: #333; font-size: 20px"></i>
@@ -106,7 +117,10 @@
         </router-link>
         <router-link to="likedVideos">
           <li class="icons-sidebar-item">
-            <i class="fas fa-thumbs-up" style="color: #333; font-size: 20px"></i>
+            <i
+              class="fas fa-thumbs-up"
+              style="color: #333; font-size: 20px"
+            ></i>
           </li>
         </router-link>
         <router-link to="exploreVideos">
@@ -142,7 +156,7 @@ export default {
   data() {
     return {
       isSidebarOpen: false,
-      isIconsSidebarOpen:true,
+      isIconsSidebarOpen: true,
     };
   },
   methods: {
@@ -150,8 +164,12 @@ export default {
       this.isIconsSidebarOpen = !this.isIconsSidebarOpen;
       this.isSidebarOpen = !this.isSidebarOpen;
     },
-    openCreateChannelDialog(){
-      this.$emit('open-create-channel-dialog');
+    openCreateChannelDialog() {
+      this.$emit("open-create-channel-dialog");
+    },
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push("/login");
     },
   },
 };
@@ -159,10 +177,10 @@ export default {
 
 <style scoped>
 .header {
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   display: flex;
   justify-content: space-between;
@@ -279,7 +297,6 @@ export default {
   margin: 20px 20px;
 }
 
-
 /* Icons sidebar */
 .icons-sidebar {
   width: 50px;
@@ -328,5 +345,4 @@ export default {
   border-top: 1px solid #dad5d5;
   margin: 20px 20px;
 }
-
 </style>

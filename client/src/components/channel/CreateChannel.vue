@@ -145,6 +145,13 @@ export default {
   font-size: 24px;
   margin-top: 40px;
 }
+.video-card {
+  background: #f1f1f1;
+  border-radius: 15px;
+  padding: 10px 10px;
+  transition: transform 0.5s ease-in-out;
+}
+
 .card-hover {
   transform: scale(1.05);
 }
