@@ -57,7 +57,7 @@
                  <v-list-item-title>{{ comment.username }}</v-list-item-title>
                 <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle> 
               </v-list-item-content> -->
-              <div class="comment-item" v-if="comments">
+              <div class="comment-item">
                 <span class="comment-username">{{ comment.username }}</span>
                 <p class="comment-content">{{ comment.content }}</p>
               </div>
@@ -129,13 +129,14 @@ export default {
       ],
       likeColor: "grey",
       dislikeColor: "grey",
-      comments: null,
+      comments: [],
       likeState: false,
       dislikeState: false,
       videoDetails: null,
       loading: false,
       error: null,
       baseUrl: "http://localhost:3000",
+      username: "",
     };
   },
   computed: {
@@ -267,8 +268,36 @@ export default {
       this.likeColor = this.likeState ? "blue" : "grey";
       this.dislikeColor = this.dislikeState ? "red" : "grey";
     },
-    postComment() {
-      console.log("Posted Comment:", this.comment);
+    async postComment() {
+      // console.log("Posted Comment:", this.comment);
+      if (!this.comment) {
+        return;
+      }
+
+      const videoId = this.$route.query.videoId;
+      try {
+        const response = await axiosInstance.post(
+          "http://localhost:3000/comment/add",
+          {
+            videoId: videoId,
+            text: this.comment,
+          }
+        );
+
+        if (response.status === 200 && response.data.success) {
+          const newComment = {
+            username: this.username,
+            content: this.comment,
+          };
+          this.comments.push(newComment);
+
+          this.comment = "";
+        } else {
+          console.log("Failed to add a comment.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
     async getVideoDetails() {
       this.loading = true;
@@ -312,9 +341,25 @@ export default {
         this.loading = false;
       }
     },
+    async getUserProfile() {
+    try {
+      const response = await axiosInstance.get(
+        "http://localhost:3000/user/getProfile"
+      );
+      // console.log(response);
+      if (response.status === 200) {
+        this.username = response.data.results[0].username;
+      } else {
+        console.log("Failed to fetch user profile");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  },
   },
   created() {
     this.getVideoDetails();
+    this.getUserProfile();
   },
 };
 </script>
@@ -342,13 +387,13 @@ export default {
 .avatar {
   width: 40px;
   height: 40px;
-  border-radius: 50%; 
-  overflow: hidden; 
+  border-radius: 50%;
+  overflow: hidden;
 }
 .avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
 }
 .channel-name {
   margin-left: 10px;
@@ -367,7 +412,7 @@ export default {
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 10px; 
+  margin-right: 10px;
 }
 .comment-item {
   margin-bottom: 10px;
@@ -390,7 +435,7 @@ export default {
 .related-video-card {
   margin-bottom: 20px;
 }
-.upload-date{
-  padding-bottom:20px;
+.upload-date {
+  padding-bottom: 20px;
 }
 </style>
