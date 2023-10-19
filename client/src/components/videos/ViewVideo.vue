@@ -39,10 +39,31 @@
           <div class="channel-name">{{ videoDetails.channel_name }}</div>
         </div>
         <v-card-text>
-          <p class="upload-date">Uploaded {{ daysAgo }} days ago</p>
-          <v-textarea v-model="comment" label="Add a Comment"></v-textarea>
+          <p class="upload-date">Uploaded {{ formattedUploadDate }}</p>
+          <v-text-field v-model="comment" label="Add a Comment"></v-text-field>
           <v-btn @click="postComment">Post Comment</v-btn>
         </v-card-text>
+
+        <!-- Comments Section -->
+        <v-card class="comments">
+          <v-card-title class="headline">Comments</v-card-title>
+          <v-list>
+            <v-list-item v-for="(comment, index) in comments" :key="index">
+              <!-- <v-list-item-avatar v-if="comment.user_pic_url">
+                <img :src="comment.user_pic_url" alt="User Avatar" />
+              </v-list-item-avatar> -->
+
+              <!-- <v-list-item-content v-if="comments">
+                 <v-list-item-title>{{ comment.username }}</v-list-item-title>
+                <v-list-item-subtitle>{{ comment.content }}</v-list-item-subtitle> 
+              </v-list-item-content> -->
+              <div class="comment-item" v-if="comments">
+                <span class="comment-username">{{ comment.username }}</span>
+                <p class="comment-content">{{ comment.content }}</p>
+              </div>
+            </v-list-item>
+          </v-list>
+        </v-card>
       </v-card>
 
       <!-- Related Videos -->
@@ -108,7 +129,7 @@ export default {
       ],
       likeColor: "grey",
       dislikeColor: "grey",
-      comment: "",
+      comments: null,
       likeState: false,
       dislikeState: false,
       videoDetails: null,
@@ -118,18 +139,48 @@ export default {
     };
   },
   computed: {
-  daysAgo() {
-    if (!this.videoDetails || !this.videoDetails.upload_date) {
-      return "";
-    }
-    const uploadDate = new Date(this.videoDetails.upload_date);
-    const currentDate = new Date();
+    // daysAgo() {
+    //   if (!this.videoDetails || !this.videoDetails.upload_date) {
+    //     return "";
+    //   }
+    //   const uploadDate = new Date(this.videoDetails.upload_date);
+    //   const currentDate = new Date();
 
-    const timeDifference = currentDate - uploadDate;
-    const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    return daysAgo;
+    //   const timeDifference = currentDate - uploadDate;
+    //   const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    //   return daysAgo;
+    // },
+
+    formattedUploadDate() {
+      if (!this.videoDetails || !this.videoDetails.upload_date) {
+        return "";
+      }
+
+      const uploadDate = new Date(this.videoDetails.upload_date);
+      const currentDate = new Date();
+      const timeDifference = currentDate - uploadDate;
+      const secondsAgo = Math.floor(timeDifference / 1000);
+      const minutesAgo = Math.floor(secondsAgo / 60);
+      const hoursAgo = Math.floor(minutesAgo / 60);
+      const daysAgo = Math.floor(hoursAgo / 24);
+      const monthsAgo = Math.floor(daysAgo / 30.42);
+      const yearsAgo = Math.floor(monthsAgo / 12);
+
+      if (yearsAgo > 0) {
+        return `${yearsAgo} year${yearsAgo > 1 ? "s" : ""} ago`;
+      } else if (monthsAgo > 0) {
+        return `${monthsAgo} month${monthsAgo > 1 ? "s" : ""} ago`;
+      } else if (daysAgo > 0) {
+        return `${daysAgo} day${daysAgo > 1 ? "s" : ""} ago`;
+      } else if (hoursAgo > 0) {
+        return `${hoursAgo} hour${hoursAgo > 1 ? "s" : ""} ago`;
+      } else if (minutesAgo > 0) {
+        return `${minutesAgo} minute${minutesAgo > 1 ? "s" : ""} ago`;
+      } else {
+        return `${secondsAgo} second${secondsAgo > 1 ? "s" : ""} ago`;
+      }
+    },
   },
-},
 
   methods: {
     constructVideoUrl(relativePath) {
@@ -228,7 +279,7 @@ export default {
 
         const apiUrl = `http://localhost:3000/user/getVideo/${videoId}`;
         const response = await axiosInstance.get(apiUrl);
-        console.log(response);
+        // console.log(response);
 
         if (response.status === 200) {
           this.videoDetails = response.data.results[0];
@@ -240,7 +291,17 @@ export default {
             this.dislikeState = true;
             this.dislikeColor = "red";
           }
-          console.log(this.videoDetails.video_url);
+          // console.log(this.videoDetails.video_url);
+
+          const commentsApiUrl = `http://localhost:3000/comment/videos/${videoId}`;
+          const commentsResponse = await axiosInstance.get(commentsApiUrl);
+          console.log(commentsResponse);
+
+          if (commentsResponse.status === 200) {
+            this.comments = commentsResponse.data.comments;
+          } else {
+            this.comments = [];
+          }
         } else {
           this.error = "Failed to fetch video";
         }
@@ -281,32 +342,55 @@ export default {
 .avatar {
   width: 40px;
   height: 40px;
+  border-radius: 50%; 
+  overflow: hidden; 
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
 }
 .channel-name {
   margin-left: 10px;
   font-weight: bold;
 }
-/* .icon {
-  margin-left: 10px;
-} */
-/* .likes {
-  margin-right: 20px;
-} */
+
+.comments {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+}
+.comments img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px; 
+}
+.comment-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+.comment-username {
+  font-weight: bold;
+}
+.comment-content {
+  margin-top: 5px;
+}
+
+/* Style for related videos */
 .related-videos {
   margin-top: 20px;
 }
 .related-video-card {
   margin-bottom: 20px;
 }
-.centered-progress {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.upload-date {
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 10px;
+.upload-date{
+  padding-bottom:20px;
 }
 </style>

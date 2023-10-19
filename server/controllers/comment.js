@@ -51,7 +51,10 @@ const getCommentByVideoId = async (req, res) => {
     }
 
     const [comments] = await promisePool.execute(
-      "SELECT * From Comments Where video_id=?",
+      "SELECT C.*, U.username, U.user_pic_url " +
+      "FROM Comments AS C " +
+      "JOIN Users AS U ON C.user_id = U.id " + 
+      "WHERE C.video_id = ?",
       [videoId]
     );
 
