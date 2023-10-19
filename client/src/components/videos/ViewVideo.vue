@@ -41,7 +41,8 @@
         <v-card-text>
           <p class="upload-date">Uploaded {{ formattedUploadDate }}</p>
           <v-text-field v-model="comment" label="Add a Comment"></v-text-field>
-          <v-btn @click="postComment">Post Comment</v-btn>
+          <v-btn class="comment-action" @click="clearComment">Clear</v-btn>
+          <v-btn class="comment-action" @click="postComment">Post Comment</v-btn>
         </v-card-text>
 
         <!-- Comments Section -->
@@ -186,6 +187,9 @@ export default {
   methods: {
     constructVideoUrl(relativePath) {
       return this.baseUrl + "/" + relativePath;
+    },
+    clearComment(){
+      this.comment = '';
     },
     async toggleLike() {
       // this.likeState = !this.likeState;
@@ -437,5 +441,8 @@ export default {
 }
 .upload-date {
   padding-bottom: 20px;
+}
+.comment-action{
+  margin:10px;
 }
 </style>

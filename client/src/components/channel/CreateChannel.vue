@@ -145,5 +145,9 @@ export default {
   font-size: 24px;
   margin-top: 40px;
 }
+.card-hover {
+  transform: scale(1.05);
+}
+
 
 </style>
