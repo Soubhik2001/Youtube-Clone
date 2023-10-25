@@ -4,7 +4,15 @@
   </div>
   <v-container style="padding-top: 100px">
     <h1 class="text-center" style="margin: 20px">Profile</h1>
-
+    <div class="text-center" style="margin: 10px">
+      <img
+        v-if="user_pic_url"
+        class="profile-pic"
+        :src="user_pic_url"
+        alt="Profile Picture"
+        @error="handleImageError"
+      />
+    </div>
     <v-form>
       <div v-if="showAlert">
         <v-row justify="center">
@@ -76,6 +84,7 @@ export default {
       email: "",
       username: "",
       password: "",
+      user_pic_url: null,
       passwordVisible: false,
       showAlert: false,
       alertColor: "",
@@ -85,6 +94,9 @@ export default {
     };
   },
   methods: {
+    handleImageError() {
+      console.log("Error loading image:", this.user_pic_url);
+    }, 
     togglePasswordVisibility() {
       this.passwordVisible = !this.passwordVisible;
     },
@@ -100,6 +112,7 @@ export default {
 
           this.username = userData[0].username;
           this.email = userData[0].email;
+          this.user_pic_url = userData[0].user_pic_url;
         } else {
           console.log("Failed to fetch user data");
         }
@@ -125,7 +138,7 @@ export default {
           this.alertColor = "green";
           this.alertTitle = "Success";
           this.alertText = "Profile updated successfully";
-          this.alertIcon = "fas fa-check"
+          this.alertIcon = "fas fa-check";
         } else {
           this.showAlert = true;
           this.alertColor = "red-accent-4";
@@ -150,4 +163,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.profile-pic {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin: 0 auto;
+  object-fit: cover;
+}
+</style>
