@@ -103,10 +103,10 @@ const updateChannel = async (req, res) => {
   }
 };
 
-//get videos from a channel
+//get videos and other info from a channel
 const getVideoFromChannel = async (req, res) => {
   try {
-    const { channelId } = req.params.channelId;
+    const { channelId } = req.params;
 
     const [results] = await promisePool.execute(
       "SELECT " +
