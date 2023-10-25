@@ -1,6 +1,6 @@
 <template>
   <app-header></app-header>
-  <v-row justify="center" style="padding-top: 100px;">
+  <v-row justify="center" style="padding-top: 100px">
     <v-dialog v-model="dialog" persistent width="800">
       <template v-slot:activator="{ props }">
         <v-container class="channel-creation-container">
@@ -17,7 +17,7 @@
           </v-btn>
           <hr style="border-top: 1px solid #dad5d5" />
           <h2 class="explore-channels-heading">Explore channels</h2>
-          <br>
+          <br />
           <v-row>
             <v-col
               v-for="(card, index) in cards"
@@ -55,19 +55,26 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-text-field label="Channel name*" required></v-text-field>
-            </v-row>
-            <v-row>
-              <v-textarea label="Channel description" required></v-textarea>
-            </v-row>
-            <v-row>
-              <v-file-input
-                accept="image/png, image/jpeg, image/bmp"
-                label="Channel Thumbnail*"
+              <v-text-field
+                v-model="channelName"
+                label="Channel name*"
                 required
-                variant="filled"
+              ></v-text-field>
+            </v-row>
+            <v-row>
+              <v-textarea
+                v-model="description"
+                label="Channel description"
+                required
+              ></v-textarea>
+            </v-row>
+            <v-row>
+              <v-text-field
+                v-model="channel_pic_url"
+                label="Channel thumbnail url"
+                required
                 prepend-icon="fas fa-camera"
-              ></v-file-input>
+              ></v-text-field>
             </v-row>
           </v-container>
           <small>*indicates required field</small>
@@ -77,7 +84,7 @@
           <v-btn color="red-lighten-1" variant="text" @click="dialog = false">
             Close
           </v-btn>
-          <v-btn color="red-lighten-1" variant="text" @click="dialog = false">
+          <v-btn color="red-lighten-1" variant="text" @click="saveChannel">
             Save
           </v-btn>
         </v-card-actions>
@@ -89,7 +96,7 @@
 <script>
 // import axios from "axios";
 import AppHeader from "../common/AppHeader.vue";
-import axiosInstance from '@/axiosInstance';
+import axiosInstance from "@/axiosInstance";
 
 export default {
   components: {
@@ -99,26 +106,54 @@ export default {
     dialog: false,
     cards: [],
     isHovered: null,
+    channelName: "",
+    description: "",
+    channel_pic_url: "",
   }),
-  methods:{
-    async getChannels(){
+  methods: {
+    async getChannels() {
       try {
-        const response = await axiosInstance.get('http://localhost:3000/user/getAllChannels');
+        const response = await axiosInstance.get(
+          "http://localhost:3000/user/getAllChannels"
+        );
 
-        console.log(response);
-        if(response.status === 200){
+        // console.log(response);
+        if (response.status === 200) {
           this.cards = response.data.channelResults;
-        }else{
-          console.log('Failed to fetch channels');
+        } else {
+          console.log("Failed to fetch channels");
         }
       } catch (error) {
         console.log(error);
       }
     },
+
+    async saveChannel (){
+      const data = {
+        channelName : this.channelName,
+        description : this.description,
+        channel_pic_url : this.channel_pic_url,
+      };
+
+      try {
+        const response = await axiosInstance.post("http://localhost:3000/channel/add", data);
+
+        if(response.status === 200){
+          this.dialog = false;
+          this.getChannels();
+          // console.log("Channel created successfully");
+        }else{
+          console.error(response.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+    } 
   },
-  created(){
+  created() {
     this.getChannels();
-  }
+  },
 };
 </script>
 
@@ -126,7 +161,7 @@ export default {
 .channel-creation-container {
   text-align: center;
   padding: 20px;
-  padding-left:100px;
+  padding-left: 100px;
 }
 
 .create-channel-heading {
@@ -155,6 +190,4 @@ export default {
 .card-hover {
   transform: scale(1.05);
 }
-
-
 </style>
