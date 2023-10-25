@@ -128,28 +128,33 @@ export default {
       }
     },
 
-    async saveChannel (){
+    async saveChannel() {
       const data = {
-        channelName : this.channelName,
-        description : this.description,
-        channel_pic_url : this.channel_pic_url,
+        channelName: this.channelName,
+        description: this.description,
+        channel_pic_url: this.channel_pic_url,
       };
 
       try {
-        const response = await axiosInstance.post("http://localhost:3000/channel/add", data);
+        const response = await axiosInstance.post(
+          "http://localhost:3000/channel/add",
+          data
+        );
 
-        if(response.status === 200){
+        if (response.status === 200) {
           this.dialog = false;
           this.getChannels();
+          this.channelName = "";
+          this.description = "";
+          this.channel_pic_url = "";
           // console.log("Channel created successfully");
-        }else{
+        } else {
           console.error(response.data);
         }
       } catch (error) {
         console.error(error);
       }
-
-    } 
+    },
   },
   created() {
     this.getChannels();

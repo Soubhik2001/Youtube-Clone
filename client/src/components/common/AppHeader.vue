@@ -289,7 +289,7 @@ export default {
   font-size: 20px;
 }
 .sidebar-item:hover {
-  background-color: #dad5d5;
+  /* background-color: #dad5d5; */
   cursor: pointer;
 }
 .sidebar hr {
@@ -338,7 +338,7 @@ export default {
   font-size: 20px;
 }
 .icons-sidebar-item:hover {
-  background-color: #dad5d5;
+  /* background-color: #dad5d5; */
   cursor: pointer;
 }
 .icons-sidebar hr {

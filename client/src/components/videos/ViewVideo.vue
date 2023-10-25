@@ -49,6 +49,11 @@
         <v-card class="comments">
           <v-card-title class="headline">Comments</v-card-title>
           <v-list>
+            <v-list-item v-if="comments.length === 0">
+              <div class="comment-item">
+                <span class="comment-username">No comments yet</span>
+              </div>
+            </v-list-item>
             <v-list-item v-for="(comment, index) in comments" :key="index">
               <!-- <v-list-item-avatar v-if="comment.user_pic_url">
                 <img :src="comment.user_pic_url" alt="User Avatar" />
