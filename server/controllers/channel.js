@@ -113,6 +113,7 @@ const getVideoFromChannel = async (req, res) => {
         "Channel.id AS channel_id, " +
         "Channel.channel_name, " +
         "Channel.channel_pic_url, " +
+        "Channel.description, "+
         "Videos.thumbnail_url, " +
         "Videos.title, " +
         "Videos.id, " +

@@ -26,7 +26,7 @@
               sm="6"
               md="4"
               lg="3"
-            >
+            ><router-link :to="{name: 'channel-info',  params: { channelId: card.id }}" style="text-decoration: none;">
               <v-card
                 class="video-card"
                 :class="{ 'card-hover': isHovered === index }"
@@ -44,6 +44,7 @@
                   >{{ card.subscriber_count }} Subscribers</v-card-subtitle
                 >
               </v-card>
+            </router-link>
             </v-col>
           </v-row>
         </v-container>
