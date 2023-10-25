@@ -105,7 +105,7 @@ const getAllChannels = async (req, res) => {
     // const userId = req.user.userId;
 
     const [channelResults] = await promisePool.execute(
-      "SELECT Channel.channel_name, Channel.channel_pic_url, " +
+      "SELECT Channel.channel_name, Channel.channel_pic_url, Channel.id, " +
         "(SELECT COUNT(*) FROM Subscription AS S WHERE S.channel_id = Channel.id) AS subscriber_count " +
         "FROM Channel"
     );

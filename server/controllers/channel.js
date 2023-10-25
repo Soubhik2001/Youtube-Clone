@@ -103,4 +103,43 @@ const updateChannel = async (req, res) => {
   }
 };
 
-module.exports = { addChannel, getChannels, deleteChannel, updateChannel };
+//get videos from a channel
+const getVideoFromChannel = async (req, res) => {
+  try {
+    const { channelId } = req.params.channelId;
+
+    const [results] = await promisePool.execute(
+      "SELECT " +
+        "Channel.id AS channel_id, " +
+        "Channel.channel_name, " +
+        "Channel.channel_pic_url, " +
+        "Videos.thumbnail_url, " +
+        "Videos.title, " +
+        "Videos.id, " +
+        "COUNT(CASE WHEN Likes.is_like = 1 THEN Likes.id ELSE NULL END) AS like_count " +
+        "FROM " +
+        "Channel " +
+        "JOIN " +
+        "Videos ON Channel.id = Videos.channel_id " +
+        "LEFT JOIN " +
+        "Likes ON Videos.id = Likes.video_id " +
+        "WHERE " +
+        "Channel.id = ? " +
+        "GROUP BY " +
+        "Videos.id",
+      [channelId]
+    );
+
+    if(results.length === 0){
+      return res.status(404).json({success:false, message:"Channel not found"});
+    }
+    return res.status(200).json({success:true, results});
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = { addChannel, getChannels, deleteChannel, updateChannel, getVideoFromChannel };
