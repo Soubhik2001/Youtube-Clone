@@ -21,7 +21,7 @@ const addChannel = async (req, res) => {
   }
 };
 
-//Get channels
+//Get all channels
 const getChannels = async (req, res) => {
   try {
     const [results] = await promisePool.execute("SELECT * FROM Channel");

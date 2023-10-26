@@ -274,6 +274,23 @@ const trendingVideos = async (req, res) => {
   }
 };
 
+//get channels of the logged in user
+const myChannel = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const [results] = await promisePool.execute('SELECT * from Channel Where owner_id = ?', [userId]);
+
+    if(results.length === 0){
+      return res.status(404).json({success:false, message:"NO channel found"});
+    }
+    return res.status(200).json({success:true, results});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({success:false, message:"Internal Server Error"});
+  }
+};
+
 module.exports = {
   getVideosFromSubscribedChannels,
   getLikedVideos,
@@ -284,4 +301,5 @@ module.exports = {
   updateUserProfile,
   trendingVideos,
   getVideo,
+  myChannel
 };

@@ -12,6 +12,7 @@ const {
   updateUserProfile,
   trendingVideos,
   getVideo,
+  myChannel,
 } = require("../controllers/user");
 
 router.get(
@@ -27,5 +28,6 @@ router.get("/getProfile", verifyToken, getUserProfile);
 router.patch("/updateProfile", verifyToken, updateUserProfile);
 router.get("/getTrendingVideos", trendingVideos);
 router.get("/getVideo/:videoId", verifyToken, getVideo);
+router.get("/myChannel", verifyToken, myChannel);
 
 module.exports = router;
