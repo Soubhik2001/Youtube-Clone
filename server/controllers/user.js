@@ -78,7 +78,7 @@ const getSubscriptions = async (req, res) => {
     const userId = req.user.userId;
 
     const [subscribedChannels] = await promisePool.execute(
-      "SELECT Channel.channel_name, Channel.channel_pic_url, COUNT(Subscription.id) AS subscriber_count " +
+      "SELECT Channel.id, Channel.channel_name, Channel.channel_pic_url, COUNT(Subscription.id) AS subscriber_count " +
         "FROM Channel " +
         "JOIN Subscription ON Channel.id = Subscription.channel_id " +
         "GROUP BY Channel.id"
