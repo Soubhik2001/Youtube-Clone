@@ -44,6 +44,7 @@ const getChannels = async (req, res) => {
 //Delete Channel
 const deleteChannel = async (req, res) => {
   try {
+    const userId = req.user.userId;
     const { channelId } = req.params;
 
     const [channelResult] = await promisePool.execute(
@@ -55,6 +56,12 @@ const deleteChannel = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "Channel not found" });
+    }
+
+    const channelOwner = channelResult[0].owner_id;
+
+    if(channelOwner !== userId){
+      return res.status(403).json({success:false, message: "Not authorized"});
     }
 
     await promisePool.execute("DELETE From Channel Where id = ?", [channelId]);
@@ -75,6 +82,7 @@ const updateChannel = async (req, res) => {
   try {
     const { channelId } = req.params;
     const { name, description, channel_pic_url } = req.body;
+    const userId = req.user.userId;
 
     const [existingChannel] = await promisePool.execute(
       "SELECT * From Channel Where id = ?",
@@ -85,6 +93,12 @@ const updateChannel = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "Channel not found" });
+    }
+    
+    const channelOwner = existingChannel[0].owner_id;
+
+    if(channelOwner !== userId){
+      return res.status(403).json({success:false, message:"Not authorized"});
     }
 
     await promisePool.execute(

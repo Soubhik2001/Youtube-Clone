@@ -75,7 +75,6 @@ const deleteVideo = async (req, res) => {
 
     const video = videoResult[0];
 
-    r;
     if (video.uploader_id !== userId) {
       return res
         .status(403)
