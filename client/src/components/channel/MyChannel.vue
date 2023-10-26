@@ -14,7 +14,7 @@
           sm="6"
           md="4"
           lg="3"
-        >
+        ><router-link :to="{name: 'channel-info',  params: { channelId: channel.id }}" style="text-decoration: none;">
           <v-card
             class="video-card"
             :class="{ 'card-hover': isHovered === index }"
@@ -32,6 +32,7 @@
               <div class="likes">{{ channel.likes }} Likes</div>
             </div> -->
           </v-card>
+        </router-link>
         </v-col>
       </v-row>
     </v-container>
