@@ -11,6 +11,7 @@ import ExploreVideos from '../components/videos/ExploreVideos.vue';
 import TrendingVideos from '../components/videos/TrendingVideos.vue';
 import ViewVideo from '../components/videos/ViewVideo.vue';
 import ChannelInfo from '../components/channel/ChannelInfo.vue';
+import MyChannel from '../components/channel/MyChannel.vue';
 
 const routes = [
   { path: '/', component: AppLogin },
@@ -25,6 +26,7 @@ const routes = [
   { path: '/trendingVideos', component:TrendingVideos},
   { path: '/viewVideo', component:ViewVideo},
   { path: '/channelInfo/:channelId', name:'channel-info', component:ChannelInfo},
+  { path: '/myChannel', component:MyChannel},
 ];
 
 const router = createRouter({

@@ -329,6 +329,7 @@ export default {
           const newComment = {
             username: this.username,
             content: this.comment,
+            comment_date: new Date(),
           };
           this.comments.push(newComment);
 

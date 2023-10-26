@@ -54,6 +54,12 @@
             Home
           </li>
         </router-link>
+        <router-link to="/myChannel">
+          <li class="sidebar-item">
+            <i class="fas fa-film" style="color: #333; font-size: 20px"></i>
+            My Channels
+          </li>
+        </router-link>
         <router-link to="/subscriptions">
           <li class="sidebar-item">
             <i class="fas fa-rss" style="color: #333; font-size: 20px"></i>
@@ -105,47 +111,55 @@
     <div class="icons-sidebar" :class="{ open: isIconsSidebarOpen }">
       <!-- Sidebar Content -->
       <ul>
-        <router-link to="/home">
+        <router-link to="/home" @mouseover="showCaption('Home')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
-            <i class="fas fa-home" style="color: #333; font-size: 20px"></i>
+            <i class="fas fa-home" style="color: #333; font-size: 20px"></i>  
+            <span class="caption" v-if="caption === 'Home'">{{ caption }}</span>          
           </li>
         </router-link>
-        <router-link to="/subscriptions">
+        <router-link to="/myChannel" @mouseover="showCaption('My Channels')" @mouseout="hideCaption">
+          <li class="sidebar-item">
+            <i class="fas fa-film" style="color: #333; font-size: 20px"></i>
+            <span class="caption" v-if="caption === 'My Channels'">{{ caption }}</span>
+          </li>
+        </router-link>
+        <router-link to="/subscriptions" @mouseover="showCaption('Subscriptions')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
             <i class="fas fa-rss" style="color: #333; font-size: 20px"></i>
+            <span class="caption" v-if="caption === 'Subscriptions'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="likedVideos">
+        <router-link to="likedVideos" @mouseover="showCaption('Liked Videos')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
-            <i
-              class="fas fa-thumbs-up"
-              style="color: #333; font-size: 20px"
-            ></i>
+            <i class="fas fa-thumbs-up" style="color: #333; font-size: 20px"></i>
+            <span class="caption" v-if="caption === 'Liked Videos'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="exploreVideos">
+        <router-link to="exploreVideos" @mouseover="showCaption('Explore')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
             <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
+            <span class="caption" v-if="caption === 'Explore'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="trendingVideos">
+        <router-link to="trendingVideos" @mouseover="showCaption('Trending')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
             <i class="fas fa-fire" style="color: #333; font-size: 20px"></i>
+            <span class="caption" v-if="caption === 'Trending'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="#">
+        <router-link to="#" @mouseover="showCaption('Settings')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
             <i class="fas fa-cog" style="color: #333; font-size: 20px"></i>
+            <span class="caption" v-if="caption === 'Settings'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="#">
+        <router-link to="#" @mouseover="showCaption('About')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
-            <i
-              class="fas fa-info-circle"
-              style="color: #333; font-size: 20px"
-            ></i>
+            <i class="fas fa-info-circle" style="color: #333; font-size: 20px"></i>
+            <span class="caption" v-if="caption === 'About'">{{ caption }}</span>
           </li>
         </router-link>
+        <!-- <div class="caption" v-if="caption">{{ caption }}</div> -->
       </ul>
     </div>
   </div>
@@ -157,6 +171,7 @@ export default {
     return {
       isSidebarOpen: false,
       isIconsSidebarOpen: true,
+      caption: null,
     };
   },
   methods: {
@@ -170,6 +185,12 @@ export default {
     logout() {
       localStorage.removeItem("token");
       this.$router.push("/login");
+    },
+    showCaption(caption) {
+      this.caption = caption;
+    },
+    hideCaption() {
+      this.caption = null;
     },
   },
 };
@@ -264,7 +285,6 @@ export default {
   left: 0;
 }
 
-/* Sidebar Link Styles */
 .sidebar ul {
   list-style-type: none;
   padding: 0;
@@ -284,7 +304,6 @@ export default {
   font-size: 16px;
 }
 
-/* Sidebar Icon Styles */
 .sidebar i {
   font-size: 20px;
 }
@@ -297,7 +316,6 @@ export default {
   margin: 20px 20px;
 }
 
-/* Icons sidebar */
 .icons-sidebar {
   width: 50px;
   height: 100%;
@@ -313,7 +331,6 @@ export default {
   left: 0;
 }
 
-/* Icons Sidebar Link Styles */
 .icons-sidebar ul {
   list-style-type: none;
   padding: 0;
@@ -333,7 +350,6 @@ export default {
   font-size: 16px;
 }
 
-/* Sidebar Icon Styles */
 .icons-sidebar i {
   font-size: 20px;
 }
@@ -344,5 +360,20 @@ export default {
 .icons-sidebar hr {
   border-top: 1px solid #dad5d5;
   margin: 20px 20px;
+}
+
+.caption {
+  position: absolute;
+  font-size: 12px; 
+  background-color: #ccc; 
+  padding: 4px 8px; 
+  left: 50px;
+  border-radius: 4px;
+  pointer-events: none; 
+  display: none;
+}
+
+.icons-sidebar:hover .caption {
+  display: block; 
 }
 </style>
