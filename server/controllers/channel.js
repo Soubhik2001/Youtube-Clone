@@ -117,13 +117,16 @@ const getVideoFromChannel = async (req, res) => {
         "Videos.thumbnail_url, " +
         "Videos.title, " +
         "Videos.id, " +
-        "COUNT(CASE WHEN Likes.is_like = 1 THEN Likes.id ELSE NULL END) AS like_count " +
+        "COUNT(CASE WHEN Likes.is_like = 1 THEN Likes.id ELSE NULL END) AS like_count, " +
+        "(SELECT COUNT(*) FROM Subscription WHERE Subscription.channel_id = Channel.id) AS subscriber_count " +
         "FROM " +
         "Channel " +
         "JOIN " +
         "Videos ON Channel.id = Videos.channel_id " +
         "LEFT JOIN " +
         "Likes ON Videos.id = Likes.video_id " +
+        "LEFT JOIN " +
+        "Subscription ON Channel.id = Subscription.channel_id " +
         "WHERE " +
         "Channel.id = ? " +
         "GROUP BY " +
