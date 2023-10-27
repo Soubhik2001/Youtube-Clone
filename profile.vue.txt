@@ -1,0 +1,131 @@
+<template>
+  <!-- ... your existing template ... -->
+</template>
+
+<script>
+import axiosInstance from "@/axiosInstance";
+import AppHeader from "../common/AppHeader.vue";
+
+export default {
+  components: {
+    AppHeader,
+  },
+  data() {
+    return {
+      email: "",
+      username: "",
+      password: "",
+      user_pic_url: null,
+      passwordVisible: false,
+      showAlert: false,
+      alertColor: "",
+      alertTitle: "",
+      alertText: "",
+      alertIcon: "",
+      // Add data to track the original user data
+      originalUserData: {
+        email: "",
+        username: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    // ... your existing methods ...
+
+    async fetchUserProfile() {
+      try {
+        const response = await axiosInstance.get(
+          "http://localhost:3000/user/getProfile"
+        );
+
+        if (response.status === 200) {
+          const userData = response.data.results;
+          console.log(userData);
+
+          this.username = userData[0].username;
+          this.email = userData[0].email;
+          this.user_pic_url = userData[0].user_pic_url;
+
+          // Store the original user data for comparison
+          this.originalUserData = {
+            email: userData[0].email,
+            username: userData[0].username,
+            password: "", // Leave the password field empty as it should not be shown
+          };
+        } else {
+          console.log("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async updateProfile() {
+      try {
+        // Build an object with the fields that have changed
+        const updatedData = {};
+
+        if (this.email !== this.originalUserData.email) {
+          updatedData.email = this.email;
+        }
+
+        if (this.username !== this.originalUserData.username) {
+          updatedData.username = this.username;
+        }
+
+        if (this.password && this.password !== this.originalUserData.password) {
+          updatedData.password = this.password;
+        }
+
+        const response = await axiosInstance.patch(
+          "http://localhost:3000/user/updateProfile",
+          updatedData
+        );
+
+        if (response.status === 200) {
+          console.log("Profile updated successfully.");
+          this.showAlert = true;
+          this.alertColor = "green";
+          this.alertTitle = "Success";
+          this.alertText = "Profile updated successfully";
+          this.alertIcon = "fas fa-check";
+
+          // Update the original user data with the new data
+          this.originalUserData = {
+            email: this.email,
+            username: this.username,
+            password: "", // Leave the password field empty as it should not be shown
+          };
+        } else {
+          this.showAlert = true;
+          this.alertColor = "red-accent-4";
+          this.alertTitle = "Error!";
+          this.alertText = "Failed to update profile";
+          this.alertIcon = "fas fa-exclamation";
+        }
+      } catch (error) {
+        console.log(error);
+        this.showAlert = true;
+        this.alertColor = "red-accent-4";
+        this.alertTitle = "Error";
+        this.alertText = "An error occurred while updating your profile";
+        this.alertIcon = "fas fa-exclamation";
+      }
+    },
+  },
+  created() {
+    this.fetchUserProfile();
+  },
+};
+</script>
+
+<style scoped>
+.profile-pic {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin: 0 auto;
+  object-fit: cover;
+}
+</style>

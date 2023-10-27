@@ -26,7 +26,7 @@ const routes = [
   { path: '/trendingVideos', component:TrendingVideos},
   { path: '/viewVideo', component:ViewVideo},
   { path: '/channelInfo/:channelId', name:'channel-info', component:ChannelInfo},
-  { path: '/myChannel', component:MyChannel},
+  { path: '/myChannel', name:'my-channel',component:MyChannel},
 ];
 
 const router = createRouter({

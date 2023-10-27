@@ -1,11 +1,14 @@
 <template>
   <app-header></app-header>
   <v-container class="main">
+    <!-- Channel Info Section -->
     <v-row v-if="channelData && channelData.length > 0">
       <v-col cols="12" md="6">
         <h2 class="channel-name">{{ channelData[0].channel_name }}</h2>
         <p class="channel-description">{{ channelData[0].description }}</p>
-        <p class="channel-description">{{ channelData[0].subscriber_count }} subscribers</p>
+        <p class="channel-description">
+          {{ channelData[0].subscriber_count }} subscribers
+        </p>
       </v-col>
       <v-col>
         <v-avatar size="150">
@@ -16,9 +19,22 @@
           />
         </v-avatar>
       </v-col>
+      <v-col>
+        <v-btn
+          style="background-color: #da4e44; color: #ffffff; margin-top: 100px"
+          v-if="showUploadButton"
+          @click="openUploadDialog"
+        >
+          Upload Video
+        </v-btn>
+      </v-col>
     </v-row>
     <hr class="divider" v-if="channelData && channelData.length > 0" />
-    <h2 class="video-heading" v-if="channelData && channelData.length > 0">Videos</h2>
+
+    <!-- Video Section -->
+    <h2 class="video-heading" v-if="channelData && channelData.length > 0">
+      Videos
+    </h2>
     <v-row v-if="channelData && channelData.length > 0">
       <v-col
         v-for="(video, index) in channelData"
@@ -52,13 +68,54 @@
     <v-row v-else>
       <v-col cols="12">
         <v-card class="no-data-card">
-          <v-card-title class="no-data-title">No channel data available</v-card-title>
+          <v-card-title class="no-data-title"
+            >No channel data available</v-card-title
+          >
           <v-card-text class="no-data-text">
             The Channel has not posted any video.
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- Video Upload Dialog -->
+    <v-dialog v-model="uploadDialog" max-width="700">
+      <v-card>
+        <v-card-title class="headline">Upload Video</v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="submitVideo">
+            <v-text-field
+              v-model="title"
+              label="Title"
+              required
+            ></v-text-field>
+            <v-textarea
+              v-model="description"
+              label="Description"
+              required
+            ></v-textarea>
+            <v-text-field
+              v-model="thumbnail_url"
+              label="Thumbnail URL"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="video_url"
+              prepend-icon="fas fa-video"
+              required
+              label="Video URL"
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn style="color: #da4e44" @click="submitVideo">Upload</v-btn>
+          <v-btn style="color: #da4e44" @click="closeUploadDialog"
+            >Cancel</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -74,9 +131,16 @@ export default {
     return {
       channelData: null,
       isHovered: null,
+      showUploadButton: false,
+      uploadDialog: false,
+      title:"",
+      description:"",
+      thumbnail_url:"",
+      video_url:"",
     };
   },
   methods: {
+    //to fetch channel data
     async fetchChannelData() {
       try {
         const channelId = this.$route.params.channelId;
@@ -92,6 +156,49 @@ export default {
         console.error(error);
       }
     },
+    openUploadDialog() {
+      this.uploadDialog = true;
+    },
+
+    closeUploadDialog() {
+      this.uploadDialog = false;
+    },
+    async submitVideo() {
+      const data = {
+        title: this.title,
+        description: this.description,
+        thumbnail_url: this.thumbnail_url,
+        video_url: this.video_url,
+        channel_id: this.$route.params.channelId,
+      };
+      try {
+        const response = await axiosInstance.post(
+          "http://localhost:3000/video/upload",
+          data
+        );
+        if(response.status === 200){
+          this.closeUploadDialog();
+          this.fetchChannelData();
+          this.title = "";
+          this.description ="";
+          this.thumbnail_url = "";
+          this.video_url = "";
+        }else{
+          console.log("Failed to upload video");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      this.closeUploadDialog();
+    },
+  },
+
+  //beforeRouteEnter guard to check the previous route and show the upload button accordingly
+  beforeRouteEnter(to, from, next) {
+    const showUploadButton = from.name === "my-channel";
+    next((vm) => {
+      vm.showUploadButton = showUploadButton;
+    });
   },
   created() {
     this.fetchChannelData();
@@ -150,7 +257,7 @@ export default {
   border-radius: 15px;
   padding: 20px;
   text-align: center;
-  margin:150px;
+  margin: 150px;
 }
 
 .no-data-title {

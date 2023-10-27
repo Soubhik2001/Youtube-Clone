@@ -72,7 +72,7 @@
             <v-row>
               <v-text-field
                 v-model="channel_pic_url"
-                label="Channel thumbnail url"
+                label="Channel thumbnail url*"
                 required
                 prepend-icon="fas fa-camera"
               ></v-text-field>
