@@ -66,7 +66,7 @@
             Subscriptions
           </li>
         </router-link>
-        <router-link to="likedVideos">
+        <router-link to="/likedVideos">
           <li class="sidebar-item">
             <i
               class="fas fa-thumbs-up"
@@ -76,13 +76,13 @@
           </li>
         </router-link>
         <hr />
-        <router-link to="exploreVideos">
+        <router-link to="/exploreVideos">
           <li class="sidebar-item">
             <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
             Explore
           </li>
         </router-link>
-        <router-link to="trendingVideos">
+        <router-link to="/trendingVideos">
           <li class="sidebar-item">
             <i class="fas fa-fire" style="color: #333; font-size: 20px"></i>
             Trending
@@ -129,19 +129,19 @@
             <span class="caption" v-if="caption === 'Subscriptions'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="likedVideos" @mouseover="showCaption('Liked Videos')" @mouseout="hideCaption">
+        <router-link to="/likedVideos" @mouseover="showCaption('Liked Videos')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
             <i class="fas fa-thumbs-up" style="color: #333; font-size: 20px"></i>
             <span class="caption" v-if="caption === 'Liked Videos'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="exploreVideos" @mouseover="showCaption('Explore')" @mouseout="hideCaption">
+        <router-link to="/exploreVideos" @mouseover="showCaption('Explore')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
             <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
             <span class="caption" v-if="caption === 'Explore'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="trendingVideos" @mouseover="showCaption('Trending')" @mouseout="hideCaption">
+        <router-link to="/trendingVideos" @mouseover="showCaption('Trending')" @mouseout="hideCaption">
           <li class="icons-sidebar-item">
             <i class="fas fa-fire" style="color: #333; font-size: 20px"></i>
             <span class="caption" v-if="caption === 'Trending'">{{ caption }}</span>

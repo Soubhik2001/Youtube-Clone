@@ -81,7 +81,9 @@ const getSubscriptions = async (req, res) => {
       "SELECT Channel.id, Channel.channel_name, Channel.channel_pic_url, COUNT(Subscription.id) AS subscriber_count " +
         "FROM Channel " +
         "JOIN Subscription ON Channel.id = Subscription.channel_id " +
-        "GROUP BY Channel.id"
+        "WHERE Subscription.subscriber_id = ? " +
+        "GROUP BY Channel.id",
+        [userId] 
     );
 
     if (subscribedChannels.length === 0) {

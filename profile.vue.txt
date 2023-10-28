@@ -1,7 +1,3 @@
-<template>
-  <!-- ... your existing template ... -->
-</template>
-
 <script>
 import axiosInstance from "@/axiosInstance";
 import AppHeader from "../common/AppHeader.vue";

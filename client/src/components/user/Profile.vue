@@ -91,6 +91,11 @@ export default {
       alertTitle: "",
       alertText: "",
       alertIcon: "",
+      originalUserData: {
+        email: "",
+        username: "",
+        password: "",
+      },
     };
   },
   methods: {
@@ -113,6 +118,13 @@ export default {
           this.username = userData[0].username;
           this.email = userData[0].email;
           this.user_pic_url = userData[0].user_pic_url;
+
+          // Store the original user data for comparison
+          this.originalUserData = {
+            email: userData[0].email,
+            username: userData[0].username,
+            password: "", // Leave the password field empty as it should not be shown
+          };
         } else {
           console.log("Failed to fetch user data");
         }
@@ -122,11 +134,19 @@ export default {
     },
     async updateProfile() {
       try {
-        const updatedData = {
-          email: this.email,
-          username: this.username,
-          password: this.password,
-        };
+        const updatedData = {};
+
+        if (this.email !== this.originalUserData.email) {
+          updatedData.email = this.email;
+        }
+
+        if (this.username !== this.originalUserData.username) {
+          updatedData.username = this.username;
+        }
+
+        if (this.password && this.password !== this.originalUserData.password) {
+          updatedData.password = this.password;
+        }
 
         const response = await axiosInstance.patch(
           "http://localhost:3000/user/updateProfile",
@@ -139,6 +159,12 @@ export default {
           this.alertTitle = "Success";
           this.alertText = "Profile updated successfully";
           this.alertIcon = "fas fa-check";
+          // Update the original user data with the new data
+          this.originalUserData = {
+            email: this.email,
+            username: this.username,
+            password: "", // Leave the password field empty as it should not be shown
+          };
         } else {
           this.showAlert = true;
           this.alertColor = "red-accent-4";
