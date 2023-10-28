@@ -13,6 +13,6 @@ router.post("/add", verifyToken, addChannel);
 router.get("/get", getChannels);
 router.delete("/delete/:channelId", verifyToken, deleteChannel);
 router.patch("/update/:channelId", verifyToken, updateChannel);
-router.get("/getVideoFromChannel/:channelId", getVideoFromChannel);
+router.get("/getVideoFromChannel/:channelId", verifyToken, getVideoFromChannel);
 
 module.exports = router;

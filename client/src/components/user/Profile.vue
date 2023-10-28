@@ -42,7 +42,7 @@
           <v-text-field v-model="username" label="Username"></v-text-field>
         </v-col>
       </v-row>
-      <v-row justify="center">
+      <!-- <v-row justify="center">
         <v-col cols="12" sm="5">
           <v-text-field
             v-model="password"
@@ -57,7 +57,7 @@
             }}</v-icon>
           </v-btn>
         </v-col>
-      </v-row>
+      </v-row> -->
       <v-row justify="center">
         <v-btn
           style="background-color: #da4e44; color: #ffffff"
@@ -91,17 +91,12 @@ export default {
       alertTitle: "",
       alertText: "",
       alertIcon: "",
-      originalUserData: {
-        email: "",
-        username: "",
-        password: "",
-      },
     };
   },
   methods: {
     handleImageError() {
       console.log("Error loading image:", this.user_pic_url);
-    }, 
+    },
     togglePasswordVisibility() {
       this.passwordVisible = !this.passwordVisible;
     },
@@ -123,7 +118,6 @@ export default {
           this.originalUserData = {
             email: userData[0].email,
             username: userData[0].username,
-            password: "", // Leave the password field empty as it should not be shown
           };
         } else {
           console.log("Failed to fetch user data");
@@ -133,25 +127,16 @@ export default {
       }
     },
     async updateProfile() {
+      const data = {
+        email: this.email,
+        username: this.username
+      };
       try {
-        const updatedData = {};
-
-        if (this.email !== this.originalUserData.email) {
-          updatedData.email = this.email;
-        }
-
-        if (this.username !== this.originalUserData.username) {
-          updatedData.username = this.username;
-        }
-
-        if (this.password && this.password !== this.originalUserData.password) {
-          updatedData.password = this.password;
-        }
-
         const response = await axiosInstance.patch(
           "http://localhost:3000/user/updateProfile",
-          updatedData
+          data
         );
+
         if (response.status === 200) {
           console.log("Profile updated successfully.");
           this.showAlert = true;
@@ -159,12 +144,7 @@ export default {
           this.alertTitle = "Success";
           this.alertText = "Profile updated successfully";
           this.alertIcon = "fas fa-check";
-          // Update the original user data with the new data
-          this.originalUserData = {
-            email: this.email,
-            username: this.username,
-            password: "", // Leave the password field empty as it should not be shown
-          };
+        
         } else {
           this.showAlert = true;
           this.alertColor = "red-accent-4";
@@ -184,7 +164,7 @@ export default {
   },
   created() {
     this.fetchUserProfile();
-    console.log(this.email, this.username, this.password);
+    console.log(this.email, this.username);
   },
 };
 </script>

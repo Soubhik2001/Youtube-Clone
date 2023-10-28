@@ -131,13 +131,24 @@ export default {
     return {
       channelData: null,
       isHovered: null,
-      showUploadButton: false,
+      // showUploadButton: false,
       uploadDialog: false,
       title:"",
       description:"",
       thumbnail_url:"",
       video_url:"",
     };
+  },
+  computed:{
+    showUploadButton(){
+      return this.isOwner;
+    },
+    isOwner(){
+      if (this.channelData && this.channelData[0] && this.isOwnerData) {
+      return true;
+    }
+    return false;
+    }
   },
   methods: {
     //to fetch channel data
@@ -147,8 +158,10 @@ export default {
         const response = await axiosInstance.get(
           `http://localhost:3000/channel/getVideoFromChannel/${channelId}`
         );
+        // console.log(response);
         if (response.status === 200) {
           this.channelData = response.data.results;
+          this.isOwnerData = response.data.isOwner;
         } else {
           console.log("Failed to fetch channel data");
         }
@@ -193,13 +206,13 @@ export default {
     },
   },
 
-  //beforeRouteEnter guard to check the previous route and show the upload button accordingly
-  beforeRouteEnter(to, from, next) {
-    const showUploadButton = from.name === "my-channel";
-    next((vm) => {
-      vm.showUploadButton = showUploadButton;
-    });
-  },
+  // //beforeRouteEnter guard to check the previous route and show the upload button accordingly
+  // beforeRouteEnter(to, from, next) {
+  //   const showUploadButton = from.name === "my-channel";
+  //   next((vm) => {
+  //     vm.showUploadButton = showUploadButton;
+  //   });
+  // },
   created() {
     this.fetchChannelData();
   },

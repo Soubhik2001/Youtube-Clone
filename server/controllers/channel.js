@@ -121,6 +121,7 @@ const updateChannel = async (req, res) => {
 const getVideoFromChannel = async (req, res) => {
   try {
     const { channelId } = req.params;
+    const userId = req.user.userId;
 
     const [results] = await promisePool.execute(
       "SELECT " +
@@ -128,6 +129,7 @@ const getVideoFromChannel = async (req, res) => {
         "Channel.channel_name, " +
         "Channel.channel_pic_url, " +
         "Channel.description, "+
+        "Channel.owner_id, " +
         "Videos.thumbnail_url, " +
         "Videos.title, " +
         "Videos.id, " +
@@ -148,10 +150,12 @@ const getVideoFromChannel = async (req, res) => {
       [channelId]
     );
 
+      const isOwner = results[0].owner_id === userId;
+
     if(results.length === 0){
       return res.status(404).json({success:false, message:"Channel not found"});
     }
-    return res.status(200).json({success:true, results});
+    return res.status(200).json({success:true, results, isOwner});
   } catch (error) {
     console.log(error);
     return res

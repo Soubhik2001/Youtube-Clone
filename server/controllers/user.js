@@ -214,7 +214,7 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const { username, email, password } = req.body;
+    const { username, email } = req.body;
 
     const [results] = await promisePool.execute(
       "SELECT * FROM Users Where id = ?",
@@ -228,8 +228,8 @@ const updateUserProfile = async (req, res) => {
     }
 
     const [updateResult] = await promisePool.execute(
-      "UPDATE Users Set username = ?, email = ?, password =? Where id = ?",
-      [username, email, password, userId]
+      "UPDATE Users Set username = ?, email = ? Where id = ?",
+      [username, email, userId]
     );
 
     if (updateResult.length === 0) {
@@ -248,6 +248,7 @@ const updateUserProfile = async (req, res) => {
       .json({ success: false, message: "Internal Server Error" });
   }
 };
+
 
 //get the trending videos
 const trendingVideos = async (req, res) => {
