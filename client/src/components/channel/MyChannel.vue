@@ -55,6 +55,8 @@
       this.fetchMyChannels();
     },
     methods: {
+
+      //fetch channels of the user logged-in
       async fetchMyChannels() {
         try {
           const response = await axiosInstance.get(

@@ -200,6 +200,8 @@ export default {
     closeUploadDialog() {
       this.uploadDialog = false;
     },
+
+    //upload Video
     async submitVideo() {
       const data = {
         title: this.title,
@@ -228,6 +230,8 @@ export default {
       }
       this.closeUploadDialog();
     },
+
+    //Subscribe to a channel
     async subscribeToChannel() {
       const channelId = this.$route.params.channelId;
 
@@ -246,6 +250,8 @@ export default {
         console.log(error);
       }
     },
+
+    //unsubscribe a channel
     async unsubscribeFromChannel() {
       const channelId = this.$route.params.channelId;
 

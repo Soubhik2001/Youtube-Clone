@@ -63,6 +63,7 @@ export default {
         }
     },
     methods:{
+      //fetch the trending videos based on the highest likes count in descending order
         async getTrendingVideos(){
             try {
                 const response = await axiosInstance.get('http://localhost:3000/user/getTrendingVideos');

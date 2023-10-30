@@ -47,6 +47,7 @@ export default {
     isHovered: null
   }),
   methods:{
+    //get the channels that the logged-in user subscribed
     async getSubscribedChannels(){
       try {
         const response = await axiosInstance.get('http://localhost:3000/user/getSubscriptions');

@@ -112,6 +112,8 @@ export default {
     channel_pic_url: "",
   }),
   methods: {
+    
+    //fetch all the Channels
     async getChannels() {
       try {
         const response = await axiosInstance.get(
@@ -129,6 +131,7 @@ export default {
       }
     },
 
+    //create a channel
     async saveChannel() {
       const data = {
         channelName: this.channelName,

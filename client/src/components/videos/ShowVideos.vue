@@ -56,6 +56,7 @@ export default {
     };
   },
   methods: {
+    //fetch only the videos from the subscribed channels of the logged-in user
     async getVideosFromSubscribedChannels() {
       try {
         const response = await axiosInstance.get(

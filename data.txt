@@ -1,0 +1,13 @@
+For channel creation
+
+thumbnail url
+https://i.ytimg.com/vi/CGjKO_F6y9g/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAIpcMuo9sN9S1rt0lU6on23YoPpw
+
+
+For video upload
+
+thumbnail url
+https://i.ytimg.com/vi/ejoEUpUSIiU/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCTe-27OKAFkYPRssdqMkVWZKbNmA
+
+video url
+https://samplelib.com/lib/preview/mp4/sample-5s.mp4

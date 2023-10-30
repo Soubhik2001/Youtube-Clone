@@ -97,9 +97,11 @@ export default {
     handleImageError() {
       console.log("Error loading image:", this.user_pic_url);
     },
-    togglePasswordVisibility() {
-      this.passwordVisible = !this.passwordVisible;
-    },
+    // togglePasswordVisibility() {
+    //   this.passwordVisible = !this.passwordVisible;
+    // },
+
+    //fetch the Info of the logged-in user
     async fetchUserProfile() {
       try {
         const response = await axiosInstance.get(
@@ -126,6 +128,8 @@ export default {
         console.log(error);
       }
     },
+
+    //send the updated info of the logged-in user to the server
     async updateProfile() {
       const data = {
         email: this.email,

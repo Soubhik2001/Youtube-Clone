@@ -159,6 +159,7 @@ export default {
     //   return daysAgo;
     // },
 
+    //display the date on which video was uploaded in a formatted way
     formattedUploadDate() {
       if (!this.videoDetails || !this.videoDetails.upload_date) {
         return "";
@@ -188,6 +189,8 @@ export default {
         return `${secondsAgo} second${secondsAgo > 1 ? "s" : ""} ago`;
       }
     },
+
+    //display the date on which comment was added in a formatted way
     formattedCommentDate() {
     return (date) => {
       if (!date) {
@@ -228,6 +231,8 @@ export default {
     clearComment(){
       this.comment = '';
     },
+
+    //to add a like to a video, remove the existing dislike(if exist)
     async toggleLike() {
       // this.likeState = !this.likeState;
       // this.dislikeState = false;
@@ -267,6 +272,8 @@ export default {
         console.log(error);
       }
     },
+
+    //to add a dislike to a video, remove the existing like(if exist)
     async toggleDislike() {
       // this.dislikeState = !this.dislikeState;
       // this.likeState = false;
@@ -305,10 +312,14 @@ export default {
         console.log(error);
       }
     },
+
+    //to update css of the like button based on like
     updateColors() {
       this.likeColor = this.likeState ? "blue" : "grey";
       this.dislikeColor = this.dislikeState ? "red" : "grey";
     },
+
+    //to post comment
     async postComment() {
       // console.log("Posted Comment:", this.comment);
       if (!this.comment) {
@@ -341,6 +352,8 @@ export default {
         console.error(error);
       }
     },
+
+    //to fetch all the details of a particular video
     async getVideoDetails() {
       this.loading = true;
       this.error = null;
@@ -383,6 +396,8 @@ export default {
         this.loading = false;
       }
     },
+
+    //to fetch the username from the profile
     async getUserProfile() {
     try {
       const response = await axiosInstance.get(

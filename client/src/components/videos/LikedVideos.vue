@@ -64,6 +64,7 @@ export default {
     };
   },
   methods: {
+    //fetch the videos liked by the logged-in user
     async getLikedVideos() {
       try {
         const response = await axiosInstance.get(

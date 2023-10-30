@@ -60,6 +60,7 @@ export default {
     };
   },
   methods: {
+    //fetch all the videos from the server
     async getAllVideos(){
         try {
             const response = await axiosInstance.get('http://localhost:3000/user/getAllVideos');
