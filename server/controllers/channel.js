@@ -134,7 +134,8 @@ const getVideoFromChannel = async (req, res) => {
         "Videos.title, " +
         "Videos.id, " +
         "COUNT(CASE WHEN Likes.is_like = 1 THEN Likes.id ELSE NULL END) AS like_count, " +
-        "(SELECT COUNT(*) FROM Subscription WHERE Subscription.channel_id = Channel.id) AS subscriber_count " +
+        "(SELECT COUNT(*) FROM Subscription WHERE Subscription.channel_id = Channel.id) AS subscriber_count, " +
+        "(SELECT COUNT(*) FROM Subscription WHERE Subscription.channel_id = Channel.id AND Subscription.subscriber_id = ?) AS is_subscribed " +
         "FROM " +
         "Channel " +
         "JOIN " +
@@ -147,7 +148,7 @@ const getVideoFromChannel = async (req, res) => {
         "Channel.id = ? " +
         "GROUP BY " +
         "Videos.id",
-      [channelId]
+      [userId, channelId]
     );
 
       const isOwner = results[0].owner_id === userId;

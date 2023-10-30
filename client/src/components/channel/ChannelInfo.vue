@@ -9,6 +9,42 @@
         <p class="channel-description">
           {{ channelData[0].subscriber_count }} subscribers
         </p>
+        <v-btn
+          v-if="channelData[0].is_subscribed === 0"
+          @click="subscribeToChannel"
+          style="
+            background-color: #da4e44;
+            color: #ffffff;
+            margin-top: 10px;
+            margin-right: 10px;
+          "
+        >
+          Subscribe
+        </v-btn>
+        <v-btn
+          v-else
+          @click="unsubscribeFromChannel"
+          style="
+            background-color: #da4e44;
+            color: #ffffff;
+            margin-top: 10px;
+            margin-right: 10px;
+          "
+        >
+          Unsubscribe
+        </v-btn>
+        <v-btn
+          style="
+            background-color: #da4e44;
+            color: #ffffff;
+            margin-top: 10px;
+            margin-right: 10px;
+          "
+          v-if="showUploadButton"
+          @click="openUploadDialog"
+        >
+          Upload Video
+        </v-btn>
       </v-col>
       <v-col>
         <v-avatar size="150">
@@ -19,15 +55,7 @@
           />
         </v-avatar>
       </v-col>
-      <v-col>
-        <v-btn
-          style="background-color: #da4e44; color: #ffffff; margin-top: 100px"
-          v-if="showUploadButton"
-          @click="openUploadDialog"
-        >
-          Upload Video
-        </v-btn>
-      </v-col>
+      <v-col> </v-col>
     </v-row>
     <hr class="divider" v-if="channelData && channelData.length > 0" />
 
@@ -84,11 +112,7 @@
         <v-card-title class="headline">Upload Video</v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submitVideo">
-            <v-text-field
-              v-model="title"
-              label="Title"
-              required
-            ></v-text-field>
+            <v-text-field v-model="title" label="Title" required></v-text-field>
             <v-textarea
               v-model="description"
               label="Description"
@@ -133,22 +157,22 @@ export default {
       isHovered: null,
       // showUploadButton: false,
       uploadDialog: false,
-      title:"",
-      description:"",
-      thumbnail_url:"",
-      video_url:"",
+      title: "",
+      description: "",
+      thumbnail_url: "",
+      video_url: "",
     };
   },
-  computed:{
-    showUploadButton(){
+  computed: {
+    showUploadButton() {
       return this.isOwner;
     },
-    isOwner(){
+    isOwner() {
       if (this.channelData && this.channelData[0] && this.isOwnerData) {
-      return true;
-    }
-    return false;
-    }
+        return true;
+      }
+      return false;
+    },
   },
   methods: {
     //to fetch channel data
@@ -189,20 +213,56 @@ export default {
           "http://localhost:3000/video/upload",
           data
         );
-        if(response.status === 200){
+        if (response.status === 200) {
           this.closeUploadDialog();
           this.fetchChannelData();
           this.title = "";
-          this.description ="";
+          this.description = "";
           this.thumbnail_url = "";
           this.video_url = "";
-        }else{
+        } else {
           console.log("Failed to upload video");
         }
       } catch (error) {
         console.error(error);
       }
       this.closeUploadDialog();
+    },
+    async subscribeToChannel() {
+      const channelId = this.$route.params.channelId;
+
+      try {
+        const response = await axiosInstance.post(
+          `http://localhost:3000/subscription/add/${channelId}`
+        );
+
+        if (response.status === 200) {
+          this.channelData[0].is_subscribed = 1;
+          console.log("Subscribed successfully");
+        } else {
+          console.log("Failed to subscribe");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async unsubscribeFromChannel() {
+      const channelId = this.$route.params.channelId;
+
+      try {
+        const response = await axiosInstance.delete(
+          `http://localhost:3000/subscription/delete/${channelId}`
+        );
+
+        if (response.status === 200) {
+          this.channelData[0].is_subscribed = 0;
+          console.log("Unsubscribed successfully");
+        } else {
+          console.log("Failed to unsubscribed");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 
