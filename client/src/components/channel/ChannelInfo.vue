@@ -123,25 +123,11 @@
               label="Thumbnail URL"
               required
             ></v-text-field>
-            <!-- <v-text-field
-              v-model="video_url"
-              prepend-icon="fas fa-video"
-              required
-              label="Video URL"
-            ></v-text-field> -->
-            <!-- <v-file-input
-              prepend-icon="fas fa-video"
-              required
-              label="Video File"
-              accept="video/*"
-              v-model="videoFile"
-            ></v-file-input> -->
             <input type="file" @change="fileselection($event)">
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <!-- <v-btn style="color: #da4e44" @click="submitVideo">Upload</v-btn> -->
           <v-btn style="color: #da4e44" @click="uploadVideo">Upload</v-btn>
           <v-btn style="color: #da4e44" @click="closeUploadDialog"
             >Cancel</v-btn
@@ -169,7 +155,6 @@ export default {
       title: "",
       description: "",
       thumbnail_url: "",
-      // video_url: "",
       videoFile: null,
     };
   },
@@ -213,36 +198,6 @@ export default {
 
     closeUploadDialog() {
       this.uploadDialog = false;
-    },
-
-    //upload Video url
-    async submitVideo() {
-      const data = {
-        title: this.title,
-        description: this.description,
-        thumbnail_url: this.thumbnail_url,
-        video_url: this.video_url,
-        channel_id: this.$route.params.channelId,
-      };
-      try {
-        const response = await axiosInstance.post(
-          "http://localhost:3000/video/upload",
-          data
-        );
-        if (response.status === 200) {
-          this.closeUploadDialog();
-          this.fetchChannelData();
-          this.title = "";
-          this.description = "";
-          this.thumbnail_url = "";
-          this.video_url = "";
-        } else {
-          console.log("Failed to upload video");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-      this.closeUploadDialog();
     },
 
     //upload video File
@@ -317,14 +272,6 @@ export default {
       }
     },
   },
-
-  // //beforeRouteEnter guard to check the previous route and show the upload button accordingly
-  // beforeRouteEnter(to, from, next) {
-  //   const showUploadButton = from.name === "my-channel";
-  //   next((vm) => {
-  //     vm.showUploadButton = showUploadButton;
-  //   });
-  // },
   created() {
     this.fetchChannelData();
   },
