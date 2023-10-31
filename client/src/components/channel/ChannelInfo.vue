@@ -111,7 +111,7 @@
       <v-card>
         <v-card-title class="headline">Upload Video</v-card-title>
         <v-card-text>
-          <v-form @submit.prevent="submitVideo">
+          <v-form @submit.prevent="submitVideo" enctype='multipart/form-data'>
             <v-text-field v-model="title" label="Title" required></v-text-field>
             <v-textarea
               v-model="description"
@@ -123,17 +123,26 @@
               label="Thumbnail URL"
               required
             ></v-text-field>
-            <v-text-field
+            <!-- <v-text-field
               v-model="video_url"
               prepend-icon="fas fa-video"
               required
               label="Video URL"
-            ></v-text-field>
+            ></v-text-field> -->
+            <!-- <v-file-input
+              prepend-icon="fas fa-video"
+              required
+              label="Video File"
+              accept="video/*"
+              v-model="videoFile"
+            ></v-file-input> -->
+            <input type="file" @change="fileselection($event)">
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn style="color: #da4e44" @click="submitVideo">Upload</v-btn>
+          <!-- <v-btn style="color: #da4e44" @click="submitVideo">Upload</v-btn> -->
+          <v-btn style="color: #da4e44" @click="uploadVideo">Upload</v-btn>
           <v-btn style="color: #da4e44" @click="closeUploadDialog"
             >Cancel</v-btn
           >
@@ -160,7 +169,8 @@ export default {
       title: "",
       description: "",
       thumbnail_url: "",
-      video_url: "",
+      // video_url: "",
+      videoFile: null,
     };
   },
   computed: {
@@ -176,6 +186,10 @@ export default {
   },
   methods: {
     //to fetch channel data
+    fileselection(e){
+      // console.log(e.target.files[0]);
+      this.videoFile = e.target.files[0]
+    },
     async fetchChannelData() {
       try {
         const channelId = this.$route.params.channelId;
@@ -201,7 +215,7 @@ export default {
       this.uploadDialog = false;
     },
 
-    //upload Video
+    //upload Video url
     async submitVideo() {
       const data = {
         title: this.title,
@@ -222,6 +236,38 @@ export default {
           this.description = "";
           this.thumbnail_url = "";
           this.video_url = "";
+        } else {
+          console.log("Failed to upload video");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      this.closeUploadDialog();
+    },
+
+    //upload video File
+    async uploadVideo() {
+      const formData = new FormData ();
+
+      formData.append("title", this.title);
+      formData.append("description", this.description);
+      formData.append("thumbnail_url", this.thumbnail_url);
+      formData.append("channel_id", this.$route.params.channelId);
+      formData.append("video", this.videoFile);
+      // console.log(formData);
+      try {
+        const response = await axiosInstance.post(
+          "http://localhost:3000/video/upload",
+          formData
+        );
+
+        if (response.status === 200) {
+          this.closeUploadDialog();
+          this.fetchChannelData();
+          this.title = "";
+          this.description = "";
+          this.thumbnail_url = "";
+          this.videoFile = null;
         } else {
           console.log("Failed to upload video");
         }
