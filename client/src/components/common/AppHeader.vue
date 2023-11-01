@@ -184,7 +184,7 @@ export default {
     },
     logout() {
       localStorage.removeItem("token");
-      this.$router.push("/login");
+      this.$router.push("/");
     },
     showCaption(caption) {
       this.caption = caption;

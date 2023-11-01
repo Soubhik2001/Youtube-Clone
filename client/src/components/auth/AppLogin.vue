@@ -12,7 +12,6 @@
             :value="showAlert"
           ></v-alert>
         </div>
-
         <v-text-field
           type="email"
           label="Email"
@@ -40,6 +39,7 @@
           >Login</v-btn
         >
       </v-form>
+      <GoogleLogin :callback="callback" />
       <p class="my-4 text-center">
         or
         <router-link to="/forgot"
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
   data() {
     return {
@@ -75,10 +75,25 @@ export default {
     };
   },
   methods: {
-    // onSubmit() {
-    //   const credentials = { email: this.email, password: this.password };
-    //   console.log(credentials);
-    // },
+    async callback(response) {
+      // console.log(response.credential);
+      try {
+        const credential = response.credential;
+        const serverResponse = await axios.post(
+          "http://localhost:3000/auth/google-login",
+          { googleAccessToken: credential }
+        );
+        if (serverResponse.data.token) {
+          localStorage.setItem('token', serverResponse.data.token);
+          // console.log('Login successful through Google');
+          this.$router.push('/exploreVideos');
+        }else{
+          console.error('Server response did not include a valid token');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async login() {
       const apiUrl = "http://localhost:3000/auth/login";
       const credentials = {
@@ -87,13 +102,13 @@ export default {
       };
 
       try {
-        const response = await axios.post(apiUrl,credentials);
+        const response = await axios.post(apiUrl, credentials);
 
         if (response.status === 200) {
           const data = response.data;
           // console.log(data.token);
           console.log("Login successful");
-          localStorage.setItem('token', data.token);
+          localStorage.setItem("token", data.token);
           this.$router.push("/home");
         } else {
           this.showAlert = true;
@@ -101,7 +116,7 @@ export default {
         }
       } catch (error) {
         this.showAlert = true;
-         console.error(error);
+        console.error(error);
       }
     },
   },
