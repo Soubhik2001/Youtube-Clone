@@ -14,7 +14,8 @@ CREATE TABLE Users(
     password VARCHAR(255),
     user_pic_url VARCHAR(255),
     created_at TIMESTAMP Default now(),
-    updated_at TIMESTAMP Default now()
+    updated_at TIMESTAMP Default now(),
+    registration_type VARCHAR(255)
 );
 
 -- DROP TABLE IF EXISTS Channel;

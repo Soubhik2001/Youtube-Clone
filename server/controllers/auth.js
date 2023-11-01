@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { OAuth2Client } = require("google-auth-library");
 const { promisePool } = require("../config/dbConfig.js");
 const {
   validateEmail,
@@ -45,6 +46,49 @@ const registerUser = [
     }
   },
 ];
+
+//for login through google
+const googleLogin = async (req, res) => {
+  // console.log(req.body);
+  try {
+    const { googleAccessToken } = req.body;
+    const client = new OAuth2Client(process.env.CLIENT_ID);
+    // console.log(process.env.CLIENT_ID);
+    const ticket = await client.verifyIdToken({
+      idToken: googleAccessToken,
+      audience: process.env.CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, sub, name, picture } = payload;
+
+    const [user] = await promisePool.execute(
+      "SELECT * FROM Users WHERE email = ?",
+      [email]
+    );
+
+    if (!user.length) {
+      // Email doesn't exist, insert a new user
+      const [result] = await promisePool.execute(
+        "INSERT INTO Users (email, username, user_pic_url, registration_type) VALUES (?, ?, ?, 'Google')",
+        [email, name, picture]
+      );
+    }
+    const jwtToken = jwt.sign(
+      { userId: sub, email },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "2d" }
+    );
+    return res
+      .status(200)
+      .json({ success: true, token: jwtToken, userId: sub });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
 
 //Login a user
 const loginUser = [
@@ -119,30 +163,34 @@ const resetPassword = [
           .json({ success: false, message: "Invalid credentials" });
       }
 
-       // Verify the token
-       jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedUser) => {
-        if (err) {
-          return res
-            .status(401)
-            .json({ success: false, message: "Invalid token" });
+      // Verify the token
+      jwt.verify(
+        token,
+        process.env.JWT_SECRET_KEY,
+        async (err, decodedUser) => {
+          if (err) {
+            return res
+              .status(401)
+              .json({ success: false, message: "Invalid token" });
+          }
+
+          if (decodedUser.userId !== user.id) {
+            return res
+              .status(401)
+              .json({ success: false, message: "Unauthorized access" });
+          }
+
+          const hashedPassword = await bcrypt.hash(newPassword, 10);
+          await promisePool.execute(
+            "UPDATE Users SET password = ? WHERE email = ?",
+            [hashedPassword, email]
+          );
+
+          res
+            .status(200)
+            .json({ success: true, message: "Password reset successful" });
         }
-
-        if (decodedUser.userId !== user.id) {
-          return res
-            .status(401)
-            .json({ success: false, message: "Unauthorized access" });
-        }
-
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await promisePool.execute(
-          "UPDATE Users SET password = ? WHERE email = ?",
-          [hashedPassword, email]
-        );
-
-        res
-          .status(200)
-          .json({ success: true, message: "Password reset successful" });
-      });
+      );
     } catch (error) {
       res.status(500).json({ success: false, error: "Internal Server Error" });
       console.log(error);
@@ -150,8 +198,7 @@ const resetPassword = [
   },
 ];
 
-
-module.exports = { registerUser, loginUser, resetPassword };
+module.exports = { registerUser, loginUser, resetPassword, googleLogin };
 
 // //Reset Password
 // const resetPassword = [
