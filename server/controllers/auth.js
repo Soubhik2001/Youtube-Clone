@@ -74,11 +74,9 @@ const googleLogin = async (req, res) => {
         [email, name, picture]
       );
     }
-    const jwtToken = jwt.sign(
-      { userId: sub, email },
-      process.env.JWT_SECRET_KEY,
-      { expiresIn: "2d" }
-    );
+    const jwtToken = jwt.sign({ userId: sub }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "2d",
+    });
     return res
       .status(200)
       .json({ success: true, token: jwtToken, userId: sub });
