@@ -85,3 +85,21 @@ CREATE TABLE Tags(
     tag_name VARCHAR(255),
     FOREIGN KEY(video_id) REFERENCES Videos(id) ON DELETE CASCADE
 );
+
+-- DROP TABLE IF EXISTS Notifications;
+CREATE TABLE Notifications(
+    id INT Auto_Increment Primary Key,
+    notify_from INT NOT NULL,
+    notify_to INT NOT NULL,
+    type enum('like','comment','subscribe'),
+    channel_id INT,
+    video_id INT,
+    comment_id INT,
+    is_read BOOLEAN NOT NULL DEFAULT 0,
+    created_at TIMESTAMP Default now(),
+    FOREIGN KEY(notify_from) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY(notify_to) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY(channel_id) REFERENCES Channel(id) ON DELETE CASCADE,
+    FOREIGN KEY(video_id) REFERENCES Videos(id) ON DELETE CASCADE,
+    FOREIGN KEY(comment_id) REFERENCES Comments(id) ON DELETE CASCADE
+);
