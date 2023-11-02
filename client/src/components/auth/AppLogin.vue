@@ -107,7 +107,7 @@ export default {
         if (response.status === 200) {
           const data = response.data;
           // console.log(data.token);
-          console.log("Login successful");
+          // console.log("Login successful");
           localStorage.setItem("token", data.token);
           this.$router.push("/home");
         } else {
