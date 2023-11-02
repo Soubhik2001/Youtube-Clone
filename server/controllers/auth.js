@@ -61,25 +61,29 @@ const googleLogin = async (req, res) => {
 
     const payload = ticket.getPayload();
     const { email, sub, name, picture } = payload;
-
+    // console.log(sub);
     const [user] = await promisePool.execute(
-      "SELECT * FROM Users WHERE email = ?",
+      "SELECT id FROM Users WHERE email = ?",
       [email]
     );
 
-    if (!user.length) {
-      // Email doesn't exist, insert a new user
+    if (user.length > 0) {
+      const userId = user[0].id;
+      const jwtToken = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
+        expiresIn: "2d",
+      });
+      return res.status(200).json({ success: true, token: jwtToken, userId });
+    } else {
       const [result] = await promisePool.execute(
         "INSERT INTO Users (email, username, user_pic_url, registration_type) VALUES (?, ?, ?, 'Google')",
         [email, name, picture]
       );
+      const userId = result.insertId;
+      const jwtToken = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
+        expiresIn: "2d",
+      });
+      return res.status(200).json({success:true, token:jwtToken, userId});
     }
-    const jwtToken = jwt.sign({ userId: sub }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "2d",
-    });
-    return res
-      .status(200)
-      .json({ success: true, token: jwtToken, userId: sub });
   } catch (error) {
     console.log(error);
     return res

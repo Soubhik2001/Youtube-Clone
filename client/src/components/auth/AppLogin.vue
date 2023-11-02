@@ -39,7 +39,7 @@
           >Login</v-btn
         >
       </v-form>
-      <GoogleLogin :callback="callback" />
+      <GoogleLogin :callback="callback" style="margin-top:10px;"/>
       <p class="my-4 text-center">
         or
         <router-link to="/forgot"
