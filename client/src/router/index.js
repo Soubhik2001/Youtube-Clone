@@ -12,6 +12,7 @@ import TrendingVideos from '../components/videos/TrendingVideos.vue';
 import ViewVideo from '../components/videos/ViewVideo.vue';
 import ChannelInfo from '../components/channel/ChannelInfo.vue';
 import MyChannel from '../components/channel/MyChannel.vue';
+import Notification from '../components/user/Notification.vue';
 
 const routes = [
   { path: '/', component: AppLogin },
@@ -27,6 +28,7 @@ const routes = [
   { path: '/viewVideo', component:ViewVideo},
   { path: '/channelInfo/:channelId', name:'channel-info', component:ChannelInfo},
   { path: '/myChannel', name:'my-channel',component:MyChannel},
+  { path: '/notification', component:Notification},
 ];
 
 const router = createRouter({

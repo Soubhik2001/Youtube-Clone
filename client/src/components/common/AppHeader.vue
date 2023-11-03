@@ -29,9 +29,9 @@
           @click="openCreateChannelDialog"
         ></i
       ></router-link>
-      <router-link to="#"
-        ><i class="fas fa-bell" style="font-size: 20px"></i
-      ></router-link>
+      <router-link to="/notification">
+        <i class="fas fa-bell" style="font-size: 20px; color: #606060"></i>
+      </router-link>
       <router-link to="/profile">
         <i class="fas fa-user" style="color: #606060; font-size: 20px"></i>
       </router-link>
@@ -111,52 +111,104 @@
     <div class="icons-sidebar" :class="{ open: isIconsSidebarOpen }">
       <!-- Sidebar Content -->
       <ul>
-        <router-link to="/home" @mouseover="showCaption('Home')" @mouseout="hideCaption">
+        <router-link
+          to="/home"
+          @mouseover="showCaption('Home')"
+          @mouseout="hideCaption"
+        >
           <li class="icons-sidebar-item">
-            <i class="fas fa-home" style="color: #333; font-size: 20px"></i>  
-            <span class="caption" v-if="caption === 'Home'">{{ caption }}</span>          
+            <i class="fas fa-home" style="color: #333; font-size: 20px"></i>
+            <span class="caption" v-if="caption === 'Home'">{{ caption }}</span>
           </li>
         </router-link>
-        <router-link to="/myChannel" @mouseover="showCaption('My Channels')" @mouseout="hideCaption">
+        <router-link
+          to="/myChannel"
+          @mouseover="showCaption('My Channels')"
+          @mouseout="hideCaption"
+        >
           <li class="sidebar-item">
             <i class="fas fa-film" style="color: #333; font-size: 20px"></i>
-            <span class="caption" v-if="caption === 'My Channels'">{{ caption }}</span>
+            <span class="caption" v-if="caption === 'My Channels'">{{
+              caption
+            }}</span>
           </li>
         </router-link>
-        <router-link to="/subscriptions" @mouseover="showCaption('Subscriptions')" @mouseout="hideCaption">
+        <router-link
+          to="/subscriptions"
+          @mouseover="showCaption('Subscriptions')"
+          @mouseout="hideCaption"
+        >
           <li class="icons-sidebar-item">
             <i class="fas fa-rss" style="color: #333; font-size: 20px"></i>
-            <span class="caption" v-if="caption === 'Subscriptions'">{{ caption }}</span>
+            <span class="caption" v-if="caption === 'Subscriptions'">{{
+              caption
+            }}</span>
           </li>
         </router-link>
-        <router-link to="/likedVideos" @mouseover="showCaption('Liked Videos')" @mouseout="hideCaption">
+        <router-link
+          to="/likedVideos"
+          @mouseover="showCaption('Liked Videos')"
+          @mouseout="hideCaption"
+        >
           <li class="icons-sidebar-item">
-            <i class="fas fa-thumbs-up" style="color: #333; font-size: 20px"></i>
-            <span class="caption" v-if="caption === 'Liked Videos'">{{ caption }}</span>
+            <i
+              class="fas fa-thumbs-up"
+              style="color: #333; font-size: 20px"
+            ></i>
+            <span class="caption" v-if="caption === 'Liked Videos'">{{
+              caption
+            }}</span>
           </li>
         </router-link>
-        <router-link to="/exploreVideos" @mouseover="showCaption('Explore')" @mouseout="hideCaption">
+        <router-link
+          to="/exploreVideos"
+          @mouseover="showCaption('Explore')"
+          @mouseout="hideCaption"
+        >
           <li class="icons-sidebar-item">
             <i class="fas fa-compass" style="color: #333; font-size: 20px"></i>
-            <span class="caption" v-if="caption === 'Explore'">{{ caption }}</span>
+            <span class="caption" v-if="caption === 'Explore'">{{
+              caption
+            }}</span>
           </li>
         </router-link>
-        <router-link to="/trendingVideos" @mouseover="showCaption('Trending')" @mouseout="hideCaption">
+        <router-link
+          to="/trendingVideos"
+          @mouseover="showCaption('Trending')"
+          @mouseout="hideCaption"
+        >
           <li class="icons-sidebar-item">
             <i class="fas fa-fire" style="color: #333; font-size: 20px"></i>
-            <span class="caption" v-if="caption === 'Trending'">{{ caption }}</span>
+            <span class="caption" v-if="caption === 'Trending'">{{
+              caption
+            }}</span>
           </li>
         </router-link>
-        <router-link to="#" @mouseover="showCaption('Settings')" @mouseout="hideCaption">
+        <router-link
+          to="#"
+          @mouseover="showCaption('Settings')"
+          @mouseout="hideCaption"
+        >
           <li class="icons-sidebar-item">
             <i class="fas fa-cog" style="color: #333; font-size: 20px"></i>
-            <span class="caption" v-if="caption === 'Settings'">{{ caption }}</span>
+            <span class="caption" v-if="caption === 'Settings'">{{
+              caption
+            }}</span>
           </li>
         </router-link>
-        <router-link to="#" @mouseover="showCaption('About')" @mouseout="hideCaption">
+        <router-link
+          to="#"
+          @mouseover="showCaption('About')"
+          @mouseout="hideCaption"
+        >
           <li class="icons-sidebar-item">
-            <i class="fas fa-info-circle" style="color: #333; font-size: 20px"></i>
-            <span class="caption" v-if="caption === 'About'">{{ caption }}</span>
+            <i
+              class="fas fa-info-circle"
+              style="color: #333; font-size: 20px"
+            ></i>
+            <span class="caption" v-if="caption === 'About'">{{
+              caption
+            }}</span>
           </li>
         </router-link>
         <!-- <div class="caption" v-if="caption">{{ caption }}</div> -->
@@ -364,16 +416,16 @@ export default {
 
 .caption {
   position: absolute;
-  font-size: 12px; 
-  background-color: #ccc; 
-  padding: 4px 8px; 
+  font-size: 12px;
+  background-color: #ccc;
+  padding: 4px 8px;
   left: 50px;
   border-radius: 4px;
-  pointer-events: none; 
+  pointer-events: none;
   display: none;
 }
 
 .icons-sidebar:hover .caption {
-  display: block; 
+  display: block;
 }
 </style>

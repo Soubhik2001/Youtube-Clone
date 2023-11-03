@@ -21,6 +21,7 @@ const channelRoutes = require('./routes/channel');
 const likeRoutes = require('./routes/like');
 const subscriptionRoutes = require('./routes/subscription');
 const userRoutes = require('./routes/user');
+const notificationRoutes = require('./routes/notification');
 
 app.use("/auth", authRoutes);
 app.use("/video", upload.single("video"),videoRoutes);
@@ -29,6 +30,7 @@ app.use("/channel",channelRoutes);
 app.use("/like",likeRoutes);
 app.use("/subscription", subscriptionRoutes);
 app.use("/user",userRoutes);
+app.use('/notification',notificationRoutes);
 
 //Server
 const startServer = async () => {
@@ -42,6 +44,8 @@ const startServer = async () => {
     console.log(error);
   }
 };
+
+
 
 startServer();
 

@@ -17,6 +17,20 @@ const addLike = async (req, res) => {
         .json({ success: false, message: "Video not found" });
     }
 
+    const channelId = videoResult[0].channel_id;
+    const [channelResult] = await promisePool.execute(
+      "SELECT owner_id from Channel where id = ?",
+      [channelId]
+    );
+
+    if (channelResult.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Channel not found" });
+    }
+
+    const owner_id = channelResult[0].owner_id;
+
     const [existingLike] = await promisePool.execute(
       "SELECT * FROM Likes WHERE user_id = ? AND video_id = ? AND is_like = 1",
       [userId, videoId]
@@ -34,9 +48,16 @@ const addLike = async (req, res) => {
       [userId, videoId]
     );
 
+    //Insert the like in the Likes table
     await promisePool.execute(
       "INSERT INTO Likes (user_id, video_id, is_like) VALUES (?, ?, 1)",
       [userId, videoId]
+    );
+
+    //Insert the like into the Notifications table
+    await promisePool.execute(
+      "INSERT into Notifications (notify_from, notify_to, type, channel_id, video_id) VALUES(?,?,?,?,?)",
+      [userId, owner_id, "like", channelId, videoId]
     );
 
     return res.status(200).json({ success: true, message: "Liked the video" });
@@ -65,6 +86,20 @@ const addDislike = async (req, res) => {
         .json({ success: false, message: "Video not found" });
     }
 
+    const channelId = videoResult[0].channel_id;
+    const [channelResult] = await promisePool.execute(
+      "SELECT owner_id from Channel where id = ?",
+      [channelId]
+    );
+
+    const owner_id = channelResult[0].owner_id;
+
+    if (channelResult.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Chanel not found" });
+    }
+
     const [existingDislike] = await promisePool.execute(
       "SELECT * From Likes Where user_id = ? AND video_id = ? AND is_like = -1",
       [userId, videoId]
@@ -82,9 +117,16 @@ const addDislike = async (req, res) => {
       [userId, videoId]
     );
 
+    //Insert the dislike into the likes table
     await promisePool.execute(
       "INSERT INTO Likes (user_id, video_id, is_like) VALUES (?,?,-1)",
       [userId, videoId]
+    );
+
+    //Insert the dislike into the notifications table
+    await promisePool.execute(
+      "INSERT INTO Notifications (notify_from, notify_to, type, channel_id, video_id) VALUES(?,?,?,?,?)",
+      [userId, owner_id, "dislike", channelId, videoId]
     );
 
     return res

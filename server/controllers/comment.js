@@ -17,10 +17,32 @@ const addComment = async (req, res) => {
         .json({ success: false, message: "Video not found!" });
     }
 
+    const channelId = videoResult[0].channel_id;
+    const [channelResult] = await promisePool.execute(
+      "SELECT owner_id from Channel where id = ?",
+      [channelId]
+    );
+
+    if (channelResult.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Channel not found" });
+    }
+
+    const owner_id = channelResult[0].owner_id;
+
+    //Insert the comment in the Comments table
     const [commentResult] = await promisePool.execute(
       "INSERT INTO Comments (video_id, user_id, content) VALUES (?, ?, ?)",
       [videoId, userId, text]
     );
+
+    //Insert the comment into the Notifications table
+    await promisePool.execute(
+      "INSERT into Notifications(notify_from, notify_to, type, channel_id, video_id, comment_id) VALUES(?,?,?,?,?,?)",
+      [userId, owner_id, "comment", channelId, videoId, commentResult.insertId]
+    );
+
     return res.status(200).json({
       success: true,
       message: "Comment added successfully.",
@@ -52,9 +74,9 @@ const getCommentByVideoId = async (req, res) => {
 
     const [comments] = await promisePool.execute(
       "SELECT C.*, U.username, U.user_pic_url " +
-      "FROM Comments AS C " +
-      "JOIN Users AS U ON C.user_id = U.id " + 
-      "WHERE C.video_id = ?",
+        "FROM Comments AS C " +
+        "JOIN Users AS U ON C.user_id = U.id " +
+        "WHERE C.video_id = ?",
       [videoId]
     );
 

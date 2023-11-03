@@ -17,10 +17,31 @@ const addSubscription = async (req, res) => {
         .json({ success: false, message: "User already subscribed" });
     }
 
+    const [channelResult] = await promisePool.execute(
+      "SELECT owner_id from Channel where id = ?",
+      [channelId]
+    );
+
+    if (channelResult.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Channel not found" });
+    }
+
+    const owner_id = channelResult[0].owner_id;
+
+    //insert subscription in the Subscription table
     await promisePool.execute(
       "INSERT INTO Subscription (subscriber_id, channel_id) VALUES (?,?)",
       [userId, channelId]
     );
+
+    //insert the subscription in the notifications table
+    await promisePool.execute(
+      "INSERT INTO Notifications (notify_from, notify_to, type, channel_id) VALUES (?, ?, ?, ?)",
+      [userId, owner_id, "subscribe", channelId]
+    );
+
     return res
       .status(200)
       .json({ success: true, message: "Channel subscribed successfully" });
@@ -32,6 +53,7 @@ const addSubscription = async (req, res) => {
   }
 };
 
+//Unsubscribe a channel
 const deleteSubscription = async (req, res) => {
   try {
     const { channelId } = req.params;
@@ -52,6 +74,11 @@ const deleteSubscription = async (req, res) => {
       "DELETE From Subscription Where subscriber_id = ? AND channel_id = ?",
       [userId, channelId]
     );
+
+    await promisePool.execute(
+      "DELETE From Notifications Where notify_from = ? AND type = 'subscribe' AND channel_id = ?",
+      [userId, channelId]
+    );
     return res
       .status(200)
       .json({ success: true, message: "Unsubscribed successfully" });
@@ -63,6 +90,7 @@ const deleteSubscription = async (req, res) => {
   }
 };
 
+//to  fetch the subscribers of a channel
 const getSubscribersByChannel = async (req, res) => {
   try {
     const { channelId } = req.params;
@@ -98,6 +126,7 @@ const getSubscribersByChannel = async (req, res) => {
   }
 };
 
+//to get subscriptions of a user
 const getSubscribersByUser = async (req, res) => {
   try {
     const userId = req.user.userId;
