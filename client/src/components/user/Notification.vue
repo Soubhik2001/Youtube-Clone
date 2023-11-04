@@ -23,7 +23,7 @@
             </p>
           </div>
           <img
-            :src="notification.channel_pic"
+            :src="getThumbnailOrChannelPic(notification)"
             alt="Profile picture"
             class="thumbnail"
           />
@@ -94,6 +94,9 @@ export default {
           return "New notification";
       }
     },
+    getThumbnailOrChannelPic(notification){
+      return notification.type === 'subscribe' ? notification.channel_pic : notification.video_thumbnail;
+    },
   },
   computed: {
     formattedCommentDate() {
@@ -148,6 +151,10 @@ export default {
   margin-bottom: 20px;
   width: 80%;
   min-height: 80px;
+  transition: transform 0.2s;
+}
+.notification:hover {
+  transform: scale(1.02);
 }
 .profile-pic {
   width: 50px;
@@ -170,6 +177,10 @@ export default {
   margin-bottom: auto;
   margin-right: 20px;
   margin-left: 20px;
+  transition: transform 0.2s;
+}
+.remove-button:hover {
+  transform: scale(1.2);
 }
 .content {
   margin: 0;
