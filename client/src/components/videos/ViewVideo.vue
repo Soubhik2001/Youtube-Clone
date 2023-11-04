@@ -113,7 +113,6 @@
 <script>
 import axiosInstance from "@/axiosInstance";
 import AppHeader from "../common/AppHeader.vue";
-import axios from "axios";
 export default {
   components: {
     AppHeader,
@@ -147,18 +146,6 @@ export default {
     };
   },
   computed: {
-    // daysAgo() {
-    //   if (!this.videoDetails || !this.videoDetails.upload_date) {
-    //     return "";
-    //   }
-    //   const uploadDate = new Date(this.videoDetails.upload_date);
-    //   const currentDate = new Date();
-
-    //   const timeDifference = currentDate - uploadDate;
-    //   const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    //   return daysAgo;
-    // },
-
     //display the date on which video was uploaded in a formatted way
     formattedUploadDate() {
       if (!this.videoDetails || !this.videoDetails.upload_date) {

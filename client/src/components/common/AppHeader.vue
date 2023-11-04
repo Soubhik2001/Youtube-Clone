@@ -30,7 +30,9 @@
         ></i
       ></router-link>
       <router-link to="/notification">
-        <i class="fas fa-bell" style="font-size: 20px; color: #606060"></i>
+        <v-badge dot color="error">
+          <i class="fas fa-bell" style="font-size: 20px; color: #606060"></i>
+        </v-badge>
       </router-link>
       <router-link to="/profile">
         <i class="fas fa-user" style="color: #606060; font-size: 20px"></i>

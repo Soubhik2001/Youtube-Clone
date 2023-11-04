@@ -6,7 +6,18 @@ const getNotification = async (req, res) => {
     const userId = req.user.userId;
 
     const [results] = await promisePool.execute(
-      "SELECT * from Notifications Where notify_to = ? ORDER BY created_at DESC",
+      "SELECT " +
+        "N.*, " +
+        "U.user_pic_url AS notify_from_profile_pic, " +
+        "U.username AS notify_from_username, "+
+        "C.channel_pic_url AS channel_pic, " +
+        "V.thumbnail_url AS video_thumbnail " +
+        "FROM Notifications AS N " +
+        "LEFT JOIN Users AS U ON N.notify_from = U.id " +
+        "LEFT JOIN Channel AS C ON N.channel_id = C.id " +
+        "LEFT JOIN Videos AS V ON N.video_id = V.id " +
+        "WHERE N.notify_to = ? " +
+        "ORDER BY N.created_at DESC",
       [userId]
     );
 
@@ -30,8 +41,13 @@ const deleteNotificationById = async (req, res) => {
       [userId]
     );
 
-    if(notificationResult.length === 0){
-        return res.status(400).json({success:false, message:'No notifications exists for the user'});
+    if (notificationResult.length === 0) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "No notifications exists for the user",
+        });
     }
 
     await promisePool.execute("DELETE From Notifications Where id = ?", [
