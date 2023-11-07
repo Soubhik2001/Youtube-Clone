@@ -59,7 +59,7 @@ const addLike = async (req, res) => {
       "INSERT into Notifications (notify_from, notify_to, type, channel_id, video_id) VALUES(?,?,?,?,?)",
       [userId, owner_id, "like", channelId, videoId]
     );
-
+    
     return res.status(200).json({ success: true, message: "Liked the video" });
   } catch (error) {
     console.log(error);

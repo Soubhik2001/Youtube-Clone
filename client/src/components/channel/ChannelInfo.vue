@@ -141,6 +141,7 @@
 <script>
 import axiosInstance from "@/axiosInstance";
 import AppHeader from "../common/AppHeader.vue";
+import socketioService from "@/services/socketio.service";
 
 export default {
   components: {
@@ -244,6 +245,7 @@ export default {
         if (response.status === 200) {
           this.channelData[0].is_subscribed = 1;
           console.log("Subscribed successfully");
+            socketioService.getSocket().emit("subscribe", channelId);
         } else {
           console.log("Failed to subscribe");
         }

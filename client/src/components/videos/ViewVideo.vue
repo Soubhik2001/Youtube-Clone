@@ -42,7 +42,9 @@
           <p class="upload-date">Uploaded {{ formattedUploadDate }}</p>
           <v-text-field v-model="comment" label="Add a Comment"></v-text-field>
           <v-btn class="comment-action" @click="clearComment">Clear</v-btn>
-          <v-btn class="comment-action" @click="postComment">Post Comment</v-btn>
+          <v-btn class="comment-action" @click="postComment"
+            >Post Comment</v-btn
+          >
         </v-card-text>
 
         <!-- Comments Section -->
@@ -66,7 +68,9 @@
               <div class="comment-item">
                 <span class="comment-username">{{ comment.username }}</span>
                 <p class="comment-content">{{ comment.content }}</p>
-                <p class="comment-date right-align">{{ formattedCommentDate(comment.comment_date) }}</p>
+                <p class="comment-date right-align">
+                  {{ formattedCommentDate(comment.comment_date) }}
+                </p>
               </div>
             </v-list-item>
           </v-list>
@@ -112,6 +116,7 @@
 
 <script>
 import axiosInstance from "@/axiosInstance";
+import socketioService from "@/services/socketio.service";
 import AppHeader from "../common/AppHeader.vue";
 export default {
   components: {
@@ -119,6 +124,7 @@ export default {
   },
   data() {
     return {
+      comment: "",
       relatedVideos: [
         {
           thumbnail:
@@ -179,52 +185,48 @@ export default {
 
     //display the date on which comment was added in a formatted way
     formattedCommentDate() {
-    return (date) => {
-      if (!date) {
-        return "";
-      }
+      return (date) => {
+        if (!date) {
+          return "";
+        }
 
-      const uploadDate = new Date(date);
-      const currentDate = new Date();
-      const timeDifference = currentDate - uploadDate;
-      const secondsAgo = Math.floor(timeDifference / 1000);
-      const minutesAgo = Math.floor(secondsAgo / 60);
-      const hoursAgo = Math.floor(minutesAgo / 60);
-      const daysAgo = Math.floor(hoursAgo / 24);
-      const monthsAgo = Math.floor(daysAgo / 30.42);
-      const yearsAgo = Math.floor(monthsAgo / 12);
+        const uploadDate = new Date(date);
+        const currentDate = new Date();
+        const timeDifference = currentDate - uploadDate;
+        const secondsAgo = Math.floor(timeDifference / 1000);
+        const minutesAgo = Math.floor(secondsAgo / 60);
+        const hoursAgo = Math.floor(minutesAgo / 60);
+        const daysAgo = Math.floor(hoursAgo / 24);
+        const monthsAgo = Math.floor(daysAgo / 30.42);
+        const yearsAgo = Math.floor(monthsAgo / 12);
 
-      if (yearsAgo > 0) {
-        return `${yearsAgo} year${yearsAgo > 1 ? "s" : ""} ago`;
-      } else if (monthsAgo > 0) {
-        return `${monthsAgo} month${monthsAgo > 1 ? "s" : ""} ago`;
-      } else if (daysAgo > 0) {
-        return `${daysAgo} day${daysAgo > 1 ? "s" : ""} ago`;
-      } else if (hoursAgo > 0) {
-        return `${hoursAgo} hour${hoursAgo > 1 ? "s" : ""} ago`;
-      } else if (minutesAgo > 0) {
-        return `${minutesAgo} minute${minutesAgo > 1 ? "s" : ""} ago`;
-      } else {
-        return `${secondsAgo} second${secondsAgo > 1 ? "s" : ""} ago`;
-      }
-    };
-  },
+        if (yearsAgo > 0) {
+          return `${yearsAgo} year${yearsAgo > 1 ? "s" : ""} ago`;
+        } else if (monthsAgo > 0) {
+          return `${monthsAgo} month${monthsAgo > 1 ? "s" : ""} ago`;
+        } else if (daysAgo > 0) {
+          return `${daysAgo} day${daysAgo > 1 ? "s" : ""} ago`;
+        } else if (hoursAgo > 0) {
+          return `${hoursAgo} hour${hoursAgo > 1 ? "s" : ""} ago`;
+        } else if (minutesAgo > 0) {
+          return `${minutesAgo} minute${minutesAgo > 1 ? "s" : ""} ago`;
+        } else {
+          return `${secondsAgo} second${secondsAgo > 1 ? "s" : ""} ago`;
+        }
+      };
+    },
   },
 
   methods: {
     constructVideoUrl(relativePath) {
       return this.baseUrl + "/" + relativePath;
     },
-    clearComment(){
-      this.comment = '';
+    clearComment() {
+      this.comment = "";
     },
 
     //to add a like to a video, remove the existing dislike(if exist)
     async toggleLike() {
-      // this.likeState = !this.likeState;
-      // this.dislikeState = false;
-      // this.updateColors();
-
       const videoId = this.$route.query.videoId;
       const apiUrl = `http://localhost:3000/like/addLike/${videoId}`;
 
@@ -235,6 +237,7 @@ export default {
           if (response.status === 200) {
             this.likeState = true;
             this.updateColors();
+            socketioService.getSocket().emit("like", videoId);
             this.videoDetails.likes++;
             if (this.dislikeState) {
               this.dislikeState = false;
@@ -262,10 +265,6 @@ export default {
 
     //to add a dislike to a video, remove the existing like(if exist)
     async toggleDislike() {
-      // this.dislikeState = !this.dislikeState;
-      // this.likeState = false;
-      // this.updateColors();
-
       const videoId = this.$route.query.videoId;
       const apiUrl = `http://localhost:3000/like/addDislike/${videoId}`;
 
@@ -275,6 +274,7 @@ export default {
           if (response.status === 200) {
             this.dislikeState = true;
             this.updateColors();
+            socketioService.getSocket().emit("dislike", videoId);
             this.videoDetails.dislikes++;
             if (this.likeState) {
               this.likeState = false;
@@ -330,7 +330,7 @@ export default {
             comment_date: new Date(),
           };
           this.comments.push(newComment);
-
+          socketioService.getSocket().emit("comment", videoId);
           this.comment = "";
         } else {
           console.log("Failed to add a comment.");
@@ -386,20 +386,20 @@ export default {
 
     //to fetch the username from the profile
     async getUserProfile() {
-    try {
-      const response = await axiosInstance.get(
-        "http://localhost:3000/user/getProfile"
-      );
-      // console.log(response);
-      if (response.status === 200) {
-        this.username = response.data.results[0].username;
-      } else {
-        console.log("Failed to fetch user profile");
+      try {
+        const response = await axiosInstance.get(
+          "http://localhost:3000/user/getProfile"
+        );
+        // console.log(response);
+        if (response.status === 200) {
+          this.username = response.data.results[0].username;
+        } else {
+          console.log("Failed to fetch user profile");
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  },
+    },
   },
   created() {
     this.getVideoDetails();
@@ -482,8 +482,8 @@ export default {
 .upload-date {
   padding-bottom: 20px;
 }
-.comment-action{
-  margin:10px;
+.comment-action {
+  margin: 10px;
 }
 .comment-date {
   color: #777;
@@ -492,5 +492,4 @@ export default {
 .comment-date.right-align {
   text-align: right;
 }
-
 </style>

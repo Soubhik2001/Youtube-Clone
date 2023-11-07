@@ -39,6 +39,7 @@
 <script>
 import axiosInstance from "@/axiosInstance";
 import AppHeader from "../common/AppHeader.vue";
+import socketioService from "@/services/socketio.service";
 export default {
   components: {
     AppHeader,
@@ -133,6 +134,10 @@ export default {
   },
   created() {
     this.fetchNotifications();
+    const socket = socketioService.getSocket();
+    socket.on('newNotifications',()=>{
+      this.fetchNotifications();
+    })
   },
 };
 </script>
