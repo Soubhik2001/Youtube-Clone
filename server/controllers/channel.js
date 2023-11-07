@@ -60,8 +60,10 @@ const deleteChannel = async (req, res) => {
 
     const channelOwner = channelResult[0].owner_id;
 
-    if(channelOwner !== userId){
-      return res.status(403).json({success:false, message: "Not authorized"});
+    if (channelOwner !== userId) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not authorized" });
     }
 
     await promisePool.execute("DELETE From Channel Where id = ?", [channelId]);
@@ -94,11 +96,13 @@ const updateChannel = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Channel not found" });
     }
-    
+
     const channelOwner = existingChannel[0].owner_id;
 
-    if(channelOwner !== userId){
-      return res.status(403).json({success:false, message:"Not authorized"});
+    if (channelOwner !== userId) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not authorized" });
     }
 
     await promisePool.execute(
@@ -128,7 +132,7 @@ const getVideoFromChannel = async (req, res) => {
         "Channel.id AS channel_id, " +
         "Channel.channel_name, " +
         "Channel.channel_pic_url, " +
-        "Channel.description, "+
+        "Channel.description, " +
         "Channel.owner_id, " +
         "Videos.thumbnail_url, " +
         "Videos.title, " +
@@ -151,12 +155,19 @@ const getVideoFromChannel = async (req, res) => {
       [userId, channelId]
     );
 
-      const isOwner = results[0].owner_id === userId;
-
-    if(results.length === 0){
-      return res.status(404).json({success:false, message:"Channel not found"});
+    const [ownerResult] = await promisePool.execute(
+      "SELECT owner_id from Channel Where Channel.id = ?",
+      [channelId]
+    );
+    const ownerId = ownerResult[0].owner_id === userId; 
+    if (results.length === 0) {
+      return res
+        .status(201)
+        .json({ success: false, message: "Channel with videos not found", ownerId});
     }
-    return res.status(200).json({success:true, results, isOwner});
+    const isOwner = results[0].owner_id === userId;
+
+    return res.status(200).json({ success: true, results, isOwner });
   } catch (error) {
     console.log(error);
     return res
@@ -165,4 +176,10 @@ const getVideoFromChannel = async (req, res) => {
   }
 };
 
-module.exports = { addChannel, getChannels, deleteChannel, updateChannel, getVideoFromChannel };
+module.exports = {
+  addChannel,
+  getChannels,
+  deleteChannel,
+  updateChannel,
+  getVideoFromChannel,
+};

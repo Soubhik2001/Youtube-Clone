@@ -102,6 +102,18 @@
           <v-card-text class="no-data-text">
             The Channel has not posted any video.
           </v-card-text>
+          <v-btn
+          style="
+            background-color: #da4e44;
+            color: #ffffff;
+            margin-top: 10px;
+            margin-right: 10px;
+          "
+          v-if="ownerOfNoVideoPosted"
+          @click="openUploadDialog"
+        >
+          Upload Video
+        </v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -157,6 +169,7 @@ export default {
       description: "",
       thumbnail_url: "",
       videoFile: null,
+      isOwnerData:null,
     };
   },
   computed: {
@@ -169,6 +182,12 @@ export default {
       }
       return false;
     },
+    ownerOfNoVideoPosted(){
+      if(this.isOwnerData){
+        return true;
+      }
+      return false;
+    }
   },
   methods: {
     //to fetch channel data
@@ -186,7 +205,12 @@ export default {
         if (response.status === 200) {
           this.channelData = response.data.results;
           this.isOwnerData = response.data.isOwner;
-        } else {
+        } 
+        else if(response.status === 201){
+          console.log(response);
+          this.isOwnerData = response.data.ownerId;
+        } 
+        else {
           console.log("Failed to fetch channel data");
         }
       } catch (error) {
