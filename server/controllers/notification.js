@@ -9,7 +9,7 @@ const getNotification = async (req, res) => {
       "SELECT " +
         "N.*, " +
         "U.user_pic_url AS notify_from_profile_pic, " +
-        "U.username AS notify_from_username, "+
+        "U.username AS notify_from_username, " +
         "C.channel_pic_url AS channel_pic, " +
         "V.thumbnail_url AS video_thumbnail " +
         "FROM Notifications AS N " +
@@ -42,12 +42,10 @@ const deleteNotificationById = async (req, res) => {
     );
 
     if (notificationResult.length === 0) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "No notifications exists for the user",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "No notifications exists for the user",
+      });
     }
 
     await promisePool.execute("DELETE From Notifications Where id = ?", [
@@ -65,4 +63,40 @@ const deleteNotificationById = async (req, res) => {
   }
 };
 
-module.exports = { getNotification, deleteNotificationById };
+//clear all notifications
+const clearAllNotifications = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const [result] = await promisePool.execute(
+      "DELETE From Notifications Where notify_to = ?",
+      [userId]
+    );
+    if (result.affectedRows > 0) {
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "All notifications related to the user removed",
+        });
+    } else {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: "No notifications found for this user.",
+        });
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  getNotification,
+  deleteNotificationById,
+  clearAllNotifications,
+};

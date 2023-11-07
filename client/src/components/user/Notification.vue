@@ -5,7 +5,28 @@
       <v-col>
         <h2>Notifications</h2>
       </v-col>
+      <v-row>
+        <v-col>
+          <v-btn
+          v-if="notifications.length !== 0"
+            @click="clearAllNotifications"
+            class="clear-all"
+          >
+            Clear All
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-row>
+    <v-row v-if="notifications.length === 0">
+      <v-col cols="12">
+        <v-card class="no-data-card">
+          <v-card-title class="no-data-title"
+            >No notifications yet...
+          </v-card-title>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <v-row v-for="notification in notifications" :key="notification.id">
       <v-card class="notification">
         <v-row>
@@ -27,7 +48,10 @@
             alt="Profile picture"
             class="thumbnail"
           />
-          <div class="remove-button" @click="removeNotification(notification.id)">
+          <div
+            class="remove-button"
+            @click="removeNotification(notification.id)"
+          >
             <i class="fas fa-xmark"></i>
           </div>
         </v-row>
@@ -67,15 +91,26 @@ export default {
     },
     async removeNotification(notificationId) {
       try {
-        const response  = await axiosInstance.delete(
+        const response = await axiosInstance.delete(
           `http://localhost:3000/notification/deleteNotification/${notificationId}`
         );
         if (response.status === 200) {
           this.notifications = this.notifications.filter(
             (notification) => notification.id !== notificationId
           );
-        }else{
+        } else {
           console.log(response.data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async clearAllNotifications(){
+      try {
+        const resposne = await axiosInstance.delete('http://localhost:3000/notification/allNotifications');
+        if(resposne.status === 200){
+          console.log('Removed all notifications');
+          this.fetchNotifications();
         }
       } catch (error) {
         console.error(error);
@@ -95,8 +130,10 @@ export default {
           return "New notification";
       }
     },
-    getThumbnailOrChannelPic(notification){
-      return notification.type === 'subscribe' ? notification.channel_pic : notification.video_thumbnail;
+    getThumbnailOrChannelPic(notification) {
+      return notification.type === "subscribe"
+        ? notification.channel_pic
+        : notification.video_thumbnail;
     },
   },
   computed: {
@@ -135,9 +172,9 @@ export default {
   created() {
     this.fetchNotifications();
     const socket = socketioService.getSocket();
-    socket.on('newNotifications',()=>{
+    socket.on("newNotifications", () => {
       this.fetchNotifications();
-    })
+    });
   },
 };
 </script>
@@ -197,5 +234,22 @@ export default {
   height: 50px;
   margin-right: 10px;
   margin-left: 10px;
+}
+.no-data-card {
+  background: #f1f1f1;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  margin: 150px;
+}
+.no-data-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.clear-all {
+  margin-top: 12px;
+  margin-left: 450px;
+  background-color: #da4e44;
+  color:white
 }
 </style>
