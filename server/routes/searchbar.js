@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {searchVideos, searchChannels} = require("../controllers/searchbar");
 
-router.get("/searchVideos", searchVideos);
-router.get("/searchChannels", searchChannels);
+router.post("/searchVideos", searchVideos);
+router.post("/searchChannels", searchChannels);
 
 module.exports = router;

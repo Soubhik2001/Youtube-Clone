@@ -10,8 +10,8 @@
     </router-link>
 
     <div class="search-bar">
-      <input type="text" placeholder="Search" />
-      <button>
+      <input v-model="searchQuery" type="text" placeholder="Search" />
+      <button @click="search">
         <i class="fas fa-search" style="color: #606060; font-size: 20px"></i>
       </button>
     </div>
@@ -220,15 +220,39 @@
 </template>
 
 <script>
+import axiosInstance from "@/axiosInstance";
+
 export default {
   data() {
     return {
       isSidebarOpen: false,
       isIconsSidebarOpen: true,
       caption: null,
+      searchQuery: "",
     };
   },
   methods: {
+    async search() {
+      try {
+        const videoResults = await axiosInstance.post(
+          `http://localhost:3000/searchbar/searchVideos?searchItem=${this.searchQuery}`
+        );
+        const channelResults = await axiosInstance.post(
+          `http://localhost:3000/searchbar/searchChannels?searchItem=${this.searchQuery}`
+        );
+        this.$router.push({
+          name: "search-results",
+          query: {
+            videoResults: JSON.stringify(videoResults.data.results),
+            channelResults: JSON.stringify(channelResults.data.results),
+          },
+        });
+        console.log(videoResults);
+        console.log(channelResults);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     toggleSidebar() {
       this.isIconsSidebarOpen = !this.isIconsSidebarOpen;
       this.isSidebarOpen = !this.isSidebarOpen;
