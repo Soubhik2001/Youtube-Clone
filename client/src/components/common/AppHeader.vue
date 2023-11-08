@@ -240,13 +240,17 @@ export default {
         const channelResults = await axiosInstance.post(
           `http://localhost:3000/searchbar/searchChannels?searchItem=${this.searchQuery}`
         );
-        this.$router.push({
-          name: "search-results",
-          query: {
-            videoResults: JSON.stringify(videoResults.data.results),
-            channelResults: JSON.stringify(channelResults.data.results),
-          },
-        });
+        // this.$router.push({
+        //   name: "search-results",
+        //   query: {
+        //     videoResults: JSON.stringify(videoResults.data.results),
+        //     channelResults: JSON.stringify(channelResults.data.results),
+        //   },
+        // });
+        this.$store.commit("setVideoResults", videoResults.data.results);
+        this.$store.commit("setChannelResults", channelResults.data.results);
+
+        this.$router.push({ name: "search-results" });
         console.log(videoResults);
         console.log(channelResults);
       } catch (error) {

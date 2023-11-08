@@ -80,14 +80,22 @@ export default {
   },
   data() {
     return {
-      videoResults: [],
-      channelResults: [],
+    //   videoResults: [],
+    //   channelResults: [],
       isHovered: null,
     };
   },
+  computed: {
+    videoResults() {
+      return this.$store.state.videoResults;
+    },
+    channelResults() {
+      return this.$store.state.channelResults;
+    },
+  },
   created() {
-    this.videoResults = JSON.parse(this.$route.query.videoResults);
-    this.channelResults = JSON.parse(this.$route.query.channelResults);
+    // this.videoResults = JSON.parse(this.$route.query.videoResults);
+    // this.channelResults = JSON.parse(this.$route.query.channelResults);
   },
 };
 </script>
