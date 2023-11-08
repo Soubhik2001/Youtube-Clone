@@ -11,33 +11,37 @@
         sm="6"
         md="4"
         lg="3"
-      >
-        <v-card
-          class="video-card"
-          :class="{ 'card-hover': isHovered === video.id }"
-          @mouseover="isHovered = video.id"
-          @mouseout="isHovered = null"
+        ><router-link
+          :to="{ path: '/viewVideo', query: { videoId: video.id } }"
+          style="text-decoration: none"
         >
-          <v-img
-            :src="video.thumbnail_url"
-            aspect-ratio="16/9"
-            height="200"
-            class="image"
-          ></v-img>
-          <v-card-title>{{ video.title }}</v-card-title>
-          <v-card-subtitle>{{ video.likes_count }} likes</v-card-subtitle>
-          <div class="video-details">
-            <div class="channel-info">
-              <v-img
-                :src="video.channel_pic_url"
-                height="30"
-                width="30"
-                style="border-radius: 15px"
-              ></v-img>
-              <div class="channel-name">{{ video.channel_name }}</div>
+          <v-card
+            class="video-card"
+            :class="{ 'card-hover': isHovered === video.id }"
+            @mouseover="isHovered = video.id"
+            @mouseout="isHovered = null"
+          >
+            <v-img
+              :src="video.thumbnail_url"
+              aspect-ratio="16/9"
+              height="200"
+              class="image"
+            ></v-img>
+            <v-card-title>{{ video.title }}</v-card-title>
+            <v-card-subtitle>{{ video.likes_count }} likes</v-card-subtitle>
+            <div class="video-details">
+              <div class="channel-info">
+                <v-img
+                  :src="video.channel_pic_url"
+                  height="30"
+                  width="30"
+                  style="border-radius: 15px"
+                ></v-img>
+                <div class="channel-name">{{ video.channel_name }}</div>
+              </div>
             </div>
-          </div>
-        </v-card>
+          </v-card>
+        </router-link>
       </v-col>
     </v-row>
   </v-container>
@@ -52,22 +56,28 @@
         sm="6"
         md="4"
         lg="3"
-      >
-        <v-card
-          class="video-card"
-          :class="{ 'card-hover': isHovered === channel.id }"
-          @mouseover="isHovered = channel.id"
-          @mouseout="isHovered = null"
+        ><router-link
+          :to="{ name: 'channel-info', params: { channelId: channel.id } }"
+          style="text-decoration: none"
         >
-          <v-img
-            :src="channel.channel_pic_url"
-            aspect-ratio="16/9"
-            height="200"
-            class="image"
-          ></v-img>
-          <v-card-title>{{ channel.channel_name }}</v-card-title>
-          <v-card-subtitle> {{ channel.subscribers_count }} subscribers</v-card-subtitle>
-        </v-card>
+          <v-card
+            class="video-card"
+            :class="{ 'card-hover': isHovered === channel.id }"
+            @mouseover="isHovered = channel.id"
+            @mouseout="isHovered = null"
+          >
+            <v-img
+              :src="channel.channel_pic_url"
+              aspect-ratio="16/9"
+              height="200"
+              class="image"
+            ></v-img>
+            <v-card-title>{{ channel.channel_name }}</v-card-title>
+            <v-card-subtitle>
+              {{ channel.subscribers_count }} subscribers</v-card-subtitle
+            >
+          </v-card>
+        </router-link>
       </v-col>
     </v-row>
   </v-container>
@@ -80,8 +90,8 @@ export default {
   },
   data() {
     return {
-    //   videoResults: [],
-    //   channelResults: [],
+      //   videoResults: [],
+      //   channelResults: [],
       isHovered: null,
     };
   },
