@@ -20,14 +20,14 @@
         >
       </v-form>
     </v-sheet>
-    <div v-if="isClicked">
+    <!-- <div v-if="isClicked">
       <v-alert
         color="success"
         icon="$success"
         title="Link to reset password sent successfully..."
         text="The link to reset password is sent successfully to your registered email password."
       ></v-alert>
-    </div>
+    </div> -->
   </div>
 </template>
 

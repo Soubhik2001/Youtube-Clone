@@ -3,17 +3,6 @@
     <h4 class="ma-4">Join the World of Videos: Sign Up to Explore!</h4>
     <v-sheet width="400">
       <v-form @submit.prevent>
-        <div v-if="showAlert">
-          <v-alert
-            color="red-accent-4"
-            icon="fas fa-exclamation"
-            title="Invalid registration data"
-            text="Username should be more than 3 letters long.
-                  Password should be more than 6 letters long.
-                  Email should be valid"
-            :value="showAlert"
-          ></v-alert>
-        </div>
         <v-text-field
           label="User Name"
           variant="outlined"
@@ -71,10 +60,6 @@ export default {
     };
   },
   methods: {
-    // onSubmit(){
-    //     const credentials = { username: this.username, email: this.email, password: this.password }
-    //   console.log(credentials);
-    // },
     async register() {
       const apiUrl = "http://localhost:3000/auth/register";
 
@@ -87,15 +72,24 @@ export default {
         const response = await axios.post(apiUrl,registrationData);
         if (response.status === 200) {
           const data = response.data;
-          console.log("Registration successful", data);
+          // console.log("Registration successful", data);
+          this.$toast.open({
+            message: "Registered successfully",
+            type: "success",
+          });
           this.$router.push("/");
         } else {
-          
+          this.$toast.open({
+            message: "Registration unsuccessful",
+            type: "error",
+          });
           throw new Error("Registration failed");
         }
       } catch (error) {
-        this.showAlert = true;
-        console.log(error);
+        this.$toast.open({
+            message: "Registration unsuccessful",
+            type: "error",
+          });
       }
     },
   },

@@ -97,7 +97,7 @@ export default {
         if (response.status === 200) {
           const data = response.data;
           localStorage.setItem("token", data.token);
-          this.$router.push("/home");
+          this.$router.push("/exploreVideos");
           this.$toast.open({
             message: "Logged in successfully",
             type: "success",
