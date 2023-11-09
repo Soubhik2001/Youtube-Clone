@@ -8,7 +8,7 @@
       <v-row>
         <v-col>
           <v-btn
-          v-if="notifications.length !== 0"
+            v-if="notifications.length !== 0"
             @click="clearAllNotifications"
             class="clear-all"
           >
@@ -105,11 +105,13 @@ export default {
         console.error(error);
       }
     },
-    async clearAllNotifications(){
+    async clearAllNotifications() {
       try {
-        const resposne = await axiosInstance.delete('http://localhost:3000/notification/allNotifications');
-        if(resposne.status === 200){
-          console.log('Removed all notifications');
+        const resposne = await axiosInstance.delete(
+          "http://localhost:3000/notification/allNotifications"
+        );
+        if (resposne.status === 200) {
+          console.log("Removed all notifications");
           this.fetchNotifications();
         }
       } catch (error) {
@@ -174,6 +176,10 @@ export default {
     const socket = socketioService.getSocket();
     socket.on("newNotifications", () => {
       this.fetchNotifications();
+      this.$toast.open({
+        message: "You have a new notification",
+        type: "success",
+      });
     });
   },
 };
@@ -250,6 +256,6 @@ export default {
   margin-top: 12px;
   margin-left: 450px;
   background-color: #da4e44;
-  color:white
+  color: white;
 }
 </style>
