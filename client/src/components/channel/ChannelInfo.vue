@@ -103,17 +103,17 @@
             The Channel has not posted any video.
           </v-card-text>
           <v-btn
-          style="
-            background-color: #da4e44;
-            color: #ffffff;
-            margin-top: 10px;
-            margin-right: 10px;
-          "
-          v-if="ownerOfNoVideoPosted"
-          @click="openUploadDialog"
-        >
-          Upload Video
-        </v-btn>
+            style="
+              background-color: #da4e44;
+              color: #ffffff;
+              margin-top: 10px;
+              margin-right: 10px;
+            "
+            v-if="ownerOfNoVideoPosted"
+            @click="openUploadDialog"
+          >
+            Upload Video
+          </v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -123,7 +123,7 @@
       <v-card>
         <v-card-title class="headline">Upload Video</v-card-title>
         <v-card-text>
-          <v-form @submit.prevent="submitVideo" enctype='multipart/form-data'>
+          <v-form @submit.prevent="submitVideo" enctype="multipart/form-data">
             <v-text-field v-model="title" label="Title" required></v-text-field>
             <v-textarea
               v-model="description"
@@ -135,7 +135,7 @@
               label="Thumbnail URL"
               required
             ></v-text-field>
-            <input type="file" @change="fileselection($event)">
+            <input type="file" @change="fileselection($event)" />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -169,7 +169,7 @@ export default {
       description: "",
       thumbnail_url: "",
       videoFile: null,
-      isOwnerData:null,
+      isOwnerData: null,
     };
   },
   computed: {
@@ -182,18 +182,18 @@ export default {
       }
       return false;
     },
-    ownerOfNoVideoPosted(){
-      if(this.isOwnerData){
+    ownerOfNoVideoPosted() {
+      if (this.isOwnerData) {
         return true;
       }
       return false;
-    }
+    },
   },
   methods: {
     //to fetch channel data
-    fileselection(e){
+    fileselection(e) {
       // console.log(e.target.files[0]);
-      this.videoFile = e.target.files[0]
+      this.videoFile = e.target.files[0];
     },
     async fetchChannelData() {
       try {
@@ -205,12 +205,10 @@ export default {
         if (response.status === 200) {
           this.channelData = response.data.results;
           this.isOwnerData = response.data.isOwner;
-        } 
-        else if(response.status === 201){
+        } else if (response.status === 201) {
           console.log(response);
           this.isOwnerData = response.data.ownerId;
-        } 
-        else {
+        } else {
           console.log("Failed to fetch channel data");
         }
       } catch (error) {
@@ -227,7 +225,7 @@ export default {
 
     //upload video File
     async uploadVideo() {
-      const formData = new FormData ();
+      const formData = new FormData();
 
       formData.append("title", this.title);
       formData.append("description", this.description);
@@ -248,8 +246,15 @@ export default {
           this.description = "";
           this.thumbnail_url = "";
           this.videoFile = null;
+          this.$toast.open({
+            message: "Video uploaded successfully",
+            type: "success",
+          });
         } else {
-          console.log("Failed to upload video");
+          this.$toast.open({
+            message: "Failed to upload video",
+            type: "error",
+          });
         }
       } catch (error) {
         console.error(error);
@@ -268,10 +273,18 @@ export default {
 
         if (response.status === 200) {
           this.channelData[0].is_subscribed = 1;
-          console.log("Subscribed successfully");
-            socketioService.getSocket().emit("subscribe", channelId);
+          // console.log("Subscribed successfully");
+          this.$toast.open({
+            message: "Channel subscribed successfully",
+            type: "success",
+          });
+          socketioService.getSocket().emit("subscribe", channelId);
         } else {
-          console.log("Failed to subscribe");
+          // console.log("Failed to subscribe");
+          this.$toast.open({
+            message: "Failed to subscribe channel",
+            type: "error",
+          });
         }
       } catch (error) {
         console.log(error);
@@ -289,9 +302,17 @@ export default {
 
         if (response.status === 200) {
           this.channelData[0].is_subscribed = 0;
-          console.log("Unsubscribed successfully");
+          // console.log("Unsubscribed successfully");
+          this.$toast.open({
+            message: "Channel unsubscribed successfully",
+            type: "success",
+          });
         } else {
-          console.log("Failed to unsubscribed");
+          // console.log("Failed to unsubscribed");
+          this.$toast.open({
+            message: "Failed to unsubscribe channel",
+            type: "error",
+          });
         }
       } catch (error) {
         console.log(error);

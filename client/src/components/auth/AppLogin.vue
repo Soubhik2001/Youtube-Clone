@@ -3,15 +3,6 @@
     <h4 class="ma-4">Welcome Back! Sign In to Dive into Videos</h4>
     <v-sheet min-width="250" max-width="400" class="w-50">
       <v-form @submit.prevent>
-        <div v-if="showAlert">
-          <v-alert
-            color="red-accent-4"
-            icon="fas fa-exclamation"
-            title="Invalid credentials"
-            text="Check your credentials"
-            :value="showAlert"
-          ></v-alert>
-        </div>
         <v-text-field
           type="email"
           label="Email"
@@ -71,7 +62,6 @@ export default {
     return {
       email: "",
       password: "",
-      showAlert: false,
     };
   },
   methods: {
@@ -106,17 +96,23 @@ export default {
 
         if (response.status === 200) {
           const data = response.data;
-          // console.log(data.token);
-          // console.log("Login successful");
           localStorage.setItem("token", data.token);
           this.$router.push("/home");
+          this.$toast.open({
+            message: "Logged in successfully",
+            type: "success",
+          });
         } else {
-          this.showAlert = true;
-          throw new Error("Login failed");
+          this.$toast.open({
+            message: "Invalid credentials",
+            type: "error",
+          });
         }
       } catch (error) {
-        this.showAlert = true;
-        console.error(error);
+        this.$toast.open({
+            message: "Invalid credentials",
+            type: "error",
+          });
       }
     },
   },

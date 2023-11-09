@@ -251,10 +251,18 @@ export default {
         this.$store.commit("setChannelResults", channelResults.data.results);
 
         this.$router.push({ name: "search-results" });
-        console.log(videoResults);
-        console.log(channelResults);
+        this.$toast.open({
+        message: "Results found",
+        type: "success",
+      });
+        // console.log(videoResults);
+        // console.log(channelResults);
       } catch (error) {
         console.log(error);
+        this.$toast.open({
+        message: "No results found",
+        type: "error",
+      });
       }
     },
     toggleSidebar() {
@@ -267,6 +275,10 @@ export default {
     logout() {
       localStorage.removeItem("token");
       this.$router.push("/");
+      this.$toast.open({
+            message: "Logged out successfully",
+            type: "success",
+          });
     },
     showCaption(caption) {
       this.caption = caption;

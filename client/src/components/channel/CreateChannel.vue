@@ -26,25 +26,28 @@
               sm="6"
               md="4"
               lg="3"
-            ><router-link :to="{name: 'channel-info',  params: { channelId: card.id }}" style="text-decoration: none;">
-              <v-card
-                class="video-card"
-                :class="{ 'card-hover': isHovered === index }"
-                @mouseover="isHovered = index"
-                @mouseout="isHovered = null"
+              ><router-link
+                :to="{ name: 'channel-info', params: { channelId: card.id } }"
+                style="text-decoration: none"
               >
-                <v-img
-                  :src="card.channel_pic_url"
-                  aspect-ratio="16/9"
-                  height="200"
-                  cover
-                ></v-img>
-                <v-card-title>{{ card.channel_name }}</v-card-title>
-                <v-card-subtitle
-                  >{{ card.subscriber_count }} Subscribers</v-card-subtitle
+                <v-card
+                  class="video-card"
+                  :class="{ 'card-hover': isHovered === index }"
+                  @mouseover="isHovered = index"
+                  @mouseout="isHovered = null"
                 >
-              </v-card>
-            </router-link>
+                  <v-img
+                    :src="card.channel_pic_url"
+                    aspect-ratio="16/9"
+                    height="200"
+                    cover
+                  ></v-img>
+                  <v-card-title>{{ card.channel_name }}</v-card-title>
+                  <v-card-subtitle
+                    >{{ card.subscriber_count }} Subscribers</v-card-subtitle
+                  >
+                </v-card>
+              </router-link>
             </v-col>
           </v-row>
         </v-container>
@@ -112,7 +115,6 @@ export default {
     channel_pic_url: "",
   }),
   methods: {
-    
     //fetch all the Channels
     async getChannels() {
       try {
@@ -152,8 +154,16 @@ export default {
           this.description = "";
           this.channel_pic_url = "";
           // console.log("Channel created successfully");
+          this.$toast.open({
+            message: "Channel created successfully",
+            type: "success",
+          });
         } else {
           console.error(response.data);
+          this.$toast.open({
+            message: "Failed to create channel",
+            type: "error",
+          });
         }
       } catch (error) {
         console.error(error);

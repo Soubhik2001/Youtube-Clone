@@ -142,27 +142,22 @@ export default {
         );
 
         if (response.status === 200) {
-          console.log("Profile updated successfully.");
-          this.showAlert = true;
-          this.alertColor = "green";
-          this.alertTitle = "Success";
-          this.alertText = "Profile updated successfully";
-          this.alertIcon = "fas fa-check";
+          this.$toast.open({
+            message: "Profile updated successfully",
+            type: "success",
+          });
         
         } else {
-          this.showAlert = true;
-          this.alertColor = "red-accent-4";
-          this.alertTitle = "Error!";
-          this.alertText = "Failed to update profile";
-          this.alertIcon = "fas fa-exclamation";
-        }
+        this.$toast.open({
+            message: "Failed to update profile",
+            type: "error",
+          });
+      }
       } catch (error) {
-        console.log(error);
-        this.showAlert = true;
-        this.alertColor = "red-accent-4";
-        this.alertTitle = "Error";
-        this.alertText = "An error occurred while updating your profile";
-        this.alertIcon = "fas fa-exclamation";
+        this.$toast.open({
+            message: "An error occurred while updating your profile",
+            type: "error",
+          });
       }
     },
   },

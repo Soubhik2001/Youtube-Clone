@@ -330,10 +330,18 @@ export default {
             comment_date: new Date(),
           };
           this.comments.push(newComment);
+          this.$toast.open({
+            message: "Comment added successfully",
+            type: "success",
+          });
           socketioService.getSocket().emit("comment", videoId);
           this.comment = "";
         } else {
-          console.log("Failed to add a comment.");
+          // console.log("Failed to add a comment.");
+          this.$toast.open({
+            message: "Failed to add comment",
+            type: "error",
+          });
         }
       } catch (error) {
         console.error(error);
