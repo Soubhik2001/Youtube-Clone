@@ -31,7 +31,7 @@
       ></router-link>
       <router-link to="/notification">
         <!-- <v-badge dot color="error"> -->
-          <i class="fas fa-bell" style="font-size: 20px; color: #606060"></i>
+        <i class="fas fa-bell" style="font-size: 20px; color: #606060"></i>
         <!-- </v-badge> -->
       </router-link>
       <router-link to="/profile">
@@ -252,17 +252,17 @@ export default {
 
         this.$router.push({ name: "search-results" });
         this.$toast.open({
-        message: "Results found",
-        type: "success",
-      });
+          message: "Results found",
+          type: "success",
+        });
         // console.log(videoResults);
         // console.log(channelResults);
       } catch (error) {
         console.log(error);
         this.$toast.open({
-        message: "No results found",
-        type: "error",
-      });
+          message: "No results found",
+          type: "error",
+        });
       }
     },
     toggleSidebar() {
@@ -276,9 +276,9 @@ export default {
       localStorage.removeItem("token");
       this.$router.push("/");
       this.$toast.open({
-            message: "Logged out successfully",
-            type: "success",
-          });
+        message: "Logged out successfully",
+        type: "success",
+      });
     },
     showCaption(caption) {
       this.caption = caption;
@@ -462,7 +462,7 @@ export default {
   background-color: #ccc;
   padding: 4px 8px;
   left: 50px;
-  border-radius: 4px;
+  border-radius: 40px;
   pointer-events: none;
   display: none;
 }

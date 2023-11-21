@@ -14,29 +14,40 @@ import ChannelInfo from '../components/channel/ChannelInfo.vue';
 import MyChannel from '../components/channel/MyChannel.vue';
 import Notification from '../components/user/Notification.vue';
 import SearchResults from '../components/search/SearchResults.vue';
-
+import { authGuard } from "./auth";
 
 const routes = [
   { path: '/', component: AppLogin },
   { path: '/register', component: AppRegister },
   { path: '/forgot', component: AppForgotPassword },
-  { path: '/home', name:'home', component: AppHome },
-  { path: '/channel', name:'channel', component:CreateChannel },
-  { path: '/profile', component:Profile },
-  { path: '/subscriptions', component:Subscriptions },
-  { path: '/likedVideos', name:'liked-videos', component:LikedVideos },
+  { path: '/home', name:'home', component: AppHome, beforeEnter:authGuard },
+  { path: '/channel', name:'channel', component:CreateChannel, beforeEnter:authGuard },
+  { path: '/profile', component:Profile, beforeEnter:authGuard },
+  { path: '/subscriptions', component:Subscriptions, beforeEnter:authGuard },
+  { path: '/likedVideos', name:'liked-videos', component:LikedVideos, beforeEnter:authGuard },
   { path: '/exploreVideos', name:'explore-videos', component:ExploreVideos },
   { path: '/trendingVideos', name:'trending-videos', component:TrendingVideos },
-  { path: '/viewVideo', component:ViewVideo },
-  { path: '/channelInfo/:channelId', name:'channel-info', component:ChannelInfo },
-  { path: '/myChannel', name:'my-channel',component:MyChannel },
-  { path: '/notification', component:Notification },
+  { path: '/viewVideo', component:ViewVideo, beforeEnter:authGuard },
+  { path: '/channelInfo/:channelId', name:'channel-info', component:ChannelInfo, beforeEnter:authGuard },
+  { path: '/myChannel', name:'my-channel',component:MyChannel, beforeEnter:authGuard },
+  { path: '/notification', component:Notification, beforeEnter:authGuard },
   { path: '/searchResults', name:'search-results', component:SearchResults },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from ,next) => {
+  if(to.path ==='/'){
+    const isAuthenticated = localStorage.getItem('token');
+    if(isAuthenticated){
+      localStorage.removeItem('token');
+      alert('You have been logged out. Please login again');
+    }
+  }
+  next();
 });
 
 export default router;
