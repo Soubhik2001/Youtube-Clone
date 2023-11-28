@@ -56,6 +56,7 @@
             Home
           </li>
         </router-link>
+        <hr>
         <router-link to="/myChannel">
           <li class="sidebar-item">
             <i class="fas fa-film" style="color: #333; font-size: 20px"></i>
@@ -90,7 +91,7 @@
             Trending
           </li>
         </router-link>
-        <hr />
+        <!-- <hr />
         <router-link to="#">
           <li class="sidebar-item">
             <i class="fas fa-cog" style="color: #333; font-size: 20px"></i>
@@ -105,7 +106,7 @@
             ></i>
             About
           </li>
-        </router-link>
+        </router-link> -->
       </ul>
     </div>
 
@@ -186,7 +187,7 @@
             }}</span>
           </li>
         </router-link>
-        <router-link
+        <!-- <router-link
           to="#"
           @mouseover="showCaption('Settings')"
           @mouseout="hideCaption"
@@ -212,7 +213,7 @@
               caption
             }}</span>
           </li>
-        </router-link>
+        </router-link> -->
         <!-- <div class="caption" v-if="caption">{{ caption }}</div> -->
       </ul>
     </div>

@@ -78,7 +78,7 @@
       </v-card>
 
       <!-- Related Videos -->
-      <v-card class="related-videos">
+      <!-- <v-card class="related-videos">
         <v-card-title class="headline">Related Videos</v-card-title>
         <v-row>
           <v-col
@@ -98,7 +98,7 @@
             </v-card>
           </v-col>
         </v-row>
-      </v-card>
+      </v-card> -->
     </div>
 
     <div v-else>
@@ -125,20 +125,20 @@ export default {
   data() {
     return {
       comment: "",
-      relatedVideos: [
-        {
-          thumbnail:
-            "https://i.ytimg.com/vi/6TYkDy54q4E/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBWCIWtkNOQuG_8cs42HbQygXoCTA",
-          title: "Related Video 1",
-          channelName: "Related Channel 1",
-        },
-        {
-          thumbnail:
-            "https://i.ytimg.com/vi/rioc6mTWOZs/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDJiTR6fmKJU7LmK2o1lfq5F7PXEw",
-          title: "Related Video 2",
-          channelName: "Related Channel 2",
-        },
-      ],
+      // relatedVideos: [
+      //   {
+      //     thumbnail:
+      //       "https://i.ytimg.com/vi/6TYkDy54q4E/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBWCIWtkNOQuG_8cs42HbQygXoCTA",
+      //     title: "Related Video 1",
+      //     channelName: "Related Channel 1",
+      //   },
+      //   {
+      //     thumbnail:
+      //       "https://i.ytimg.com/vi/rioc6mTWOZs/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDJiTR6fmKJU7LmK2o1lfq5F7PXEw",
+      //     title: "Related Video 2",
+      //     channelName: "Related Channel 2",
+      //   },
+      // ],
       likeColor: "grey",
       dislikeColor: "grey",
       comments: [],
@@ -420,6 +420,7 @@ export default {
 .main {
   padding-left: 100px;
   padding-top: 110px;
+  max-width: 1000px;
 }
 .video-card {
   margin-bottom: 20px;
@@ -499,5 +500,13 @@ export default {
 }
 .comment-date.right-align {
   text-align: right;
+}
+.video-column {
+  margin-right: 20px; 
+}
+
+.related-videos-column {
+  position: sticky;
+  top: 110px; 
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div class="d-flex flex-column justify-center align-center h-screen mx-auto">
+    <h4 class="ma-4">Forgot Password?</h4>
     <v-sheet width="300" class="mx-auto">
       <v-form @submit.prevent="onSubmit">
         <v-text-field
@@ -20,14 +21,6 @@
         >
       </v-form>
     </v-sheet>
-    <!-- <div v-if="isClicked">
-      <v-alert
-        color="success"
-        icon="$success"
-        title="Link to reset password sent successfully..."
-        text="The link to reset password is sent successfully to your registered email password."
-      ></v-alert>
-    </div> -->
   </div>
 </template>
 
