@@ -1,11 +1,11 @@
 <template>
   <div class="d-flex flex-column justify-center align-center h-screen mx-auto">
-    <h4 class="ma-4">Forgot Password?</h4>
+    <h4 class="ma-4">Forgot Password ?</h4>
     <v-sheet width="300" class="mx-auto">
       <v-form @submit.prevent="onSubmit">
         <v-text-field
           v-model="email"
-          :rules="rules"
+          :rules="emailRules"
           label="Email"
           variant="outlined"
           class="font-weight-bold"
@@ -25,23 +25,34 @@
 </template>
 
 <script>
+import axiosInstance from '@/axiosInstance';
+
 export default {
   data() {
     return {
       isClicked: false,
       email: "",
-      rules: [
-        (value) => {
-          if (value) return true;
-
-          return "You must enter a email.";
-        },
+      emailRules: [
+        (value) => !!value || "You must enter an email",
+        (value) => /.+@.+\..+/.test(value) || "Enter a valid email address",
       ],
     };
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.isClicked = true;
+
+      try {
+        const response = await axiosInstance.post("",{email: this.email});
+
+        if(response.status === 200){
+          console.log("Reset mail sent");
+        } else{
+          console.log("Failed to send reset mail");
+        }
+      } catch (error) {
+        console.error("An error occured", error);
+      }
     },
   },
 };

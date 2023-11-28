@@ -7,19 +7,24 @@
           label="User Name"
           variant="outlined"
           class="font-weight-bold"
-          style="padding-top: 20px;"
+          :rules="usernameRules"
+          style="padding-top: 20px"
           v-model="username"
         ></v-text-field>
         <v-text-field
           label="Email Id"
           variant="outlined"
           class="font-weight-bold"
+          :rules="emailRules"
+          style="padding-top: 20px"
           v-model="email"
         ></v-text-field>
         <v-text-field
           label="Password"
           variant="outlined"
           class="font-weight-bold"
+          :rules="passwordRules"
+          style="padding-top: 20px"
           v-model="password"
         ></v-text-field>
         <v-btn
@@ -48,7 +53,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -57,6 +62,18 @@ export default {
       email: "",
       password: "",
       showAlert: false,
+      passwordRules: [
+        (value) => !!value || "You must enter a password",
+        (value) => value.length >= 6 || "The password must be atleast 6 characters long",
+      ],
+      usernameRules: [
+        (value) => !!value || "You must enter a username",
+        (value) => value.length >=3 || "The username must be atleast 3 characters long",
+      ],
+      emailRules: [
+        (value) => !!value || "You must enter an email",
+        (value) => /.+@.+\..+/.test(value) || "Enter a valid email address",
+      ],
     };
   },
   methods: {
@@ -69,7 +86,7 @@ export default {
         password: this.password,
       };
       try {
-        const response = await axios.post(apiUrl,registrationData);
+        const response = await axios.post(apiUrl, registrationData);
         if (response.status === 200) {
           const data = response.data;
           // console.log("Registration successful", data);
@@ -87,9 +104,9 @@ export default {
         }
       } catch (error) {
         this.$toast.open({
-            message: "Registration unsuccessful",
-            type: "error",
-          });
+          message: "Registration unsuccessful",
+          type: "error",
+        });
       }
     },
   },

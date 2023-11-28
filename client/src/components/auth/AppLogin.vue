@@ -6,16 +6,19 @@
         <v-text-field
           type="email"
           label="Email"
+          :rules="emailRules"
           variant="outlined"
           class="font-weight-bold"
-          style="padding-top: 20px"
+          style="padding-top: 20px; padding-bottom: 10px"
           v-model="email"
         ></v-text-field>
         <v-text-field
           type="password"
           label="Password"
+          :rules="passwordRules"
           variant="outlined"
           class="font-weight-bold"
+          style="padding-bottom: 5px"
           v-model="password"
           autocomplete="false"
         ></v-text-field>
@@ -30,14 +33,14 @@
           >Login</v-btn
         >
       </v-form>
-      <GoogleLogin :callback="callback" style="margin-top:10px;"/>
+      <GoogleLogin :callback="callback" style="margin-top: 10px" />
       <p class="my-4 text-center">
         or
         <router-link to="/forgot"
           ><a
             style="cursor: pointer; color: #da4e44"
             class="text-decoration-underline font-weight-bold"
-            >Forgot Password</a
+            >Forgot Password ?</a
           ></router-link
         >
       </p>
@@ -62,6 +65,14 @@ export default {
     return {
       email: "",
       password: "",
+      emailRules: [
+        (value) => !!value || "You must enter an email",
+        (value) => /.+@.+\..+/.test(value) || "Enter a valid email address",
+      ],
+      passwordRules: [
+        (value) => !!value || "You must enter a password",
+        (value) => value.length >=6 || "The password must be 6 characters long",
+      ],
     };
   },
   methods: {
@@ -74,11 +85,11 @@ export default {
           { googleAccessToken: credential }
         );
         if (serverResponse.data.token) {
-          localStorage.setItem('token', serverResponse.data.token);
+          localStorage.setItem("token", serverResponse.data.token);
           // console.log('Login successful through Google');
-          this.$router.push('/exploreVideos');
-        }else{
-          console.error('Server response did not include a valid token');
+          this.$router.push("/exploreVideos");
+        } else {
+          console.error("Server response did not include a valid token");
         }
       } catch (error) {
         console.error(error);
@@ -110,9 +121,9 @@ export default {
         }
       } catch (error) {
         this.$toast.open({
-            message: "Invalid credentials",
-            type: "error",
-          });
+          message: "Invalid credentials",
+          type: "error",
+        });
       }
     },
   },
