@@ -34,7 +34,7 @@
         >
       </v-form>
       <GoogleLogin :callback="callback" style="margin-top: 10px" />
-      <p class="my-4 text-center">
+      <!-- <p class="my-4 text-center">
         or
         <router-link to="/forgot"
           ><a
@@ -43,7 +43,7 @@
             >Forgot Password ?</a
           ></router-link
         >
-      </p>
+      </p> -->
       <hr />
       <p class="my-4 text-center">
         Don't have an account ?
